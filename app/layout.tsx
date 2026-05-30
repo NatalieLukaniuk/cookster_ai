@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { CopilotKit } from "@copilotkit/react-core"; 
+import { CopilotKit } from "@copilotkit/react-core";
 import "@copilotkit/react-ui/v2/styles.css";
 import { cn } from "@/lib/utils";
+import { UserProvider } from "./_lib/UserContext";
 
-const geistHeading = Geist({subsets:['latin'],variable:'--font-heading'});
+const geistHeading = Geist({ subsets: ["latin"], variable: "--font-heading" });
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,11 +33,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable, geistHeading.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        inter.variable,
+        geistHeading.variable,
+      )}
     >
       <body className="min-h-full flex flex-col">
-        <CopilotKit runtimeUrl="/api/copilotkit" publicApiKey="ck_pub_0de59986ce5a6f0af5fbb1a2841a4b56" publicLicenseKey="ck_pub_0de59986ce5a6f0af5fbb1a2841a4b56">
-          {children}
+        <CopilotKit
+          runtimeUrl="/api/copilotkit"
+          publicApiKey="ck_pub_0de59986ce5a6f0af5fbb1a2841a4b56"
+          publicLicenseKey="ck_pub_0de59986ce5a6f0af5fbb1a2841a4b56"
+        >
+          <UserProvider> {children} </UserProvider>
         </CopilotKit>
       </body>
     </html>
