@@ -39,7 +39,7 @@ export default function LoginForm() {
             Logged in as: {userEmail}
           </p>
           <Link
-            href="/recipes"
+            href="/add-recipy"
             className="text-sm text-blue-500 hover:underline"
           >
             View your recipe history
