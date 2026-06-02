@@ -1,30 +1,42 @@
 export interface NewRecipy {
   name: string;
   ingrediends: Ingredient[];
-  complexity: Complexity;
+  // complexity: Complexity;
   steps: PreparationStep[];
-  type: DishType[];
-  photo?: string;
-  author: string;
-  createdOn: number;
-  clonedBy?: string;
-  clonedOn?: number;
-  originalRecipy?: string;
+  // type: DishType[];
+  // photo?: string;
+  // author: string;
+  // createdOn: number;
+  // clonedBy?: string;
+  // clonedOn?: number;
+  // originalRecipy?: string;
   isSplitIntoGroups: boolean;
-  isBaseRecipy: boolean;
-  notApproved?: boolean;
-  source?: string;
-  isCheckedAndApproved?: boolean;
-  portionSize?: number;
+  // isBaseRecipy: boolean;
+  // notApproved?: boolean;
+  // source?: string;
+  // isCheckedAndApproved?: boolean;
+  // portionSize?: number;
 }
 
+export interface SimplifiedRecipy {
+  name: string;
+  ingredients: string[];
+  preparationSteps: string[];
+}
+
+export const emptySimplifiedRecipy: SimplifiedRecipy = {
+  name: "",
+  ingredients: [],
+  preparationSteps: [],
+};
+
 export interface Ingredient {
-  product: string; // product id in the firebase db // FIXME: rename to productID
+  productId: string;
   amount: number; // gramm
   defaultUnit: MeasuringUnit;
   group?: string;
-  ingredient?: string;
-  prep?: string[];
+  productName?: string;
+
 }
 
 export enum Complexity {
@@ -262,16 +274,16 @@ export enum ProductTypeText {
 export const emptyRecipy: NewRecipy = {
   name: "",
   ingrediends: [],
-  complexity: Complexity.simple,
+  // complexity: Complexity.simple,
   steps: [],
-  type: [],
-  photo: "",
-  author: "",
-  createdOn: 0,
+  // type: [],
+  // photo: "",
+  // author: "",
+  // createdOn: 0,
   isSplitIntoGroups: false,
-  isBaseRecipy: false,
-  notApproved: true,
-  source: "",
-  isCheckedAndApproved: false,
-  portionSize: 200,
+  // isBaseRecipy: false,
+  // notApproved: true,
+  // source: "",
+  // isCheckedAndApproved: false,
+  // portionSize: 200,
 };

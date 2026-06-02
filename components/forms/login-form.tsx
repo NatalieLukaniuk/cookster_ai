@@ -39,10 +39,10 @@ export default function LoginForm() {
             Logged in as: {userEmail}
           </p>
           <Link
-            href="/add-recipy"
+            href="/add-recipy-chat"
             className="text-sm text-blue-500 hover:underline"
           >
-            View your recipe history
+            Try the recipe chat assistant
           </Link>
         </div>
       )}
