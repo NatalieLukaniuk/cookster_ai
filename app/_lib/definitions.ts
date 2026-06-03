@@ -1,43 +1,4 @@
-export interface NewRecipy {
-  name: string;
-  ingrediends: Ingredient[];
-  // complexity: Complexity;
-  steps: PreparationStep[];
-  // type: DishType[];
-  // photo?: string;
-  // author: string;
-  // createdOn: number;
-  // clonedBy?: string;
-  // clonedOn?: number;
-  // originalRecipy?: string;
-  isSplitIntoGroups: boolean;
-  // isBaseRecipy: boolean;
-  // notApproved?: boolean;
-  // source?: string;
-  // isCheckedAndApproved?: boolean;
-  // portionSize?: number;
-}
-
-export interface SimplifiedRecipy {
-  name: string;
-  ingredients: string[];
-  preparationSteps: string[];
-}
-
-export const emptySimplifiedRecipy: SimplifiedRecipy = {
-  name: "",
-  ingredients: [],
-  preparationSteps: [],
-};
-
-export interface Ingredient {
-  productId: string;
-  amount: number; // gramm
-  defaultUnit: MeasuringUnit;
-  group?: string;
-  productName?: string;
-
-}
+import { z } from "zod";
 
 export enum Complexity {
   simple = 1,
@@ -46,45 +7,38 @@ export enum Complexity {
 }
 
 export enum ComplexityDescription {
-  'простий' = 1,
-  'середній',
-  'складний',
-}
-
-export interface PreparationStep {
-  id?: number;
-  description: string;
-  timeActive: number; // minutes
-  timePassive: number; // minutes
+  "простий" = 1,
+  "середній",
+  "складний",
 }
 
 export enum DishType {
-  'святкові страви' = 1,
-  'соуси' = 2,
-  'перші страви' = 3,
-  'другі страви' = 4,
-  'гарячі закуски' = 5,
-  'холодні закуски' = 6,
-  'салати' = 7,
-  'заготовки на зиму' = 8,
-  'десерти' = 9,
-  'дитяче меню' = 10,
-  'дієтичне меню' = 11,
-  'вегетаріанські страви' = 12,
-  'сніданок' = 13,
-  'потребує попередньої підготовки' = 14,
+  "святкові страви" = 1,
+  "соуси" = 2,
+  "перші страви" = 3,
+  "другі страви" = 4,
+  "гарячі закуски" = 5,
+  "холодні закуски" = 6,
+  "салати" = 7,
+  "заготовки на зиму" = 8,
+  "десерти" = 9,
+  "дитяче меню" = 10,
+  "дієтичне меню" = 11,
+  "вегетаріанські страви" = 12,
+  "сніданок" = 13,
+  "потребує попередньої підготовки" = 14,
   "м'ясна страва" = 15,
-  'гостра страва' = 16,
-  'приготування в духовці' = 17,
-  'на грилі' = 18,
-  'мультиварка' = 19,
-  'на пару' = 20,
-  'варіння' = 21,
-  'без термообробки' = 22,
-  'гарнір' = 23,
-  'риба і морепродукти' = 24,
-  'наука і здоровий глузд' = 25,
-  'напій' = 26
+  "гостра страва" = 16,
+  "приготування в духовці" = 17,
+  "на грилі" = 18,
+  "мультиварка" = 19,
+  "на пару" = 20,
+  "варіння" = 21,
+  "без термообробки" = 22,
+  "гарнір" = 23,
+  "риба і морепродукти" = 24,
+  "наука і здоровий глузд" = 25,
+  "напій" = 26,
 }
 
 export enum MeasuringUnit {
@@ -104,58 +58,47 @@ export enum MeasuringUnit {
   us_cup,
   oz,
   lb,
-  cl
+  cl,
 }
 
 export enum MeasuringUnitText {
-  'гр' = 1,
-  'кг',
-  'л',
-  'мл',
-  'ст.л.',
-  'дес.л.',
-  'ч.л.',
-  'коф.л.',
-  'дрібка',
-  'пучок',
-  'шт.',
-  'склянка',
-  'за смаком',
-  'cup',
-  'oz',
-  'lb',
-  'cl'
+  "гр" = 1,
+  "кг",
+  "л",
+  "мл",
+  "ст.л.",
+  "дес.л.",
+  "ч.л.",
+  "коф.л.",
+  "дрібка",
+  "пучок",
+  "шт.",
+  "склянка",
+  "за смаком",
+  "cup",
+  "oz",
+  "lb",
+  "cl",
 }
 
 export enum MeasuringUnitTextFull {
-  'грами' = 1,
-  'кілограми',
-  'літри',
-  'мілілітри',
-  'столові ложки',
-  'десертні ложки',
-  'чайні ложки',
-  'кофейні ложки',
-  'дрібки',
-  'пучок',
-  'штуки',
-  'склянка',
-  'за смаком',
-  'cup (240грамів)',
-  'oz (унція)',
-  'lb (фунт)',
-  'cl (centiliter)'
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  density: number; // kg/dm3
-  grInOneItem?: number;
-  calories: number; //kKal,
-  defaultUnit: MeasuringUnit;
-  type: ProductType;
-  sizeChangeCoef: number
+  "грами" = 1,
+  "кілограми",
+  "літри",
+  "мілілітри",
+  "столові ложки",
+  "десертні ложки",
+  "чайні ложки",
+  "кофейні ложки",
+  "дрібки",
+  "пучок",
+  "штуки",
+  "склянка",
+  "за смаком",
+  "cup (240грамів)",
+  "oz (унція)",
+  "lb (фунт)",
+  "cl (centiliter)",
 }
 
 export enum ProductType {
@@ -184,7 +127,7 @@ export const MeasuringUnitOptions = [
   MeasuringUnit.us_cup,
   MeasuringUnit.oz,
   MeasuringUnit.lb,
-  MeasuringUnit.cl
+  MeasuringUnit.cl,
 ];
 
 export const MeasuringUnitOptionsFluid = [
@@ -199,7 +142,6 @@ export const MeasuringUnitOptionsFluid = [
   MeasuringUnit.us_cup,
   MeasuringUnit.cl,
   MeasuringUnit.none,
-
 ];
 
 export const MeasuringUnitOptionsSpice = [
@@ -210,7 +152,7 @@ export const MeasuringUnitOptionsSpice = [
   MeasuringUnit.pinch,
   MeasuringUnit.cup,
   MeasuringUnit.us_cup,
-  MeasuringUnit.none
+  MeasuringUnit.none,
 ];
 
 export const MeasuringUnitOptionsHerbs = [
@@ -220,7 +162,7 @@ export const MeasuringUnitOptionsHerbs = [
   MeasuringUnit.bunch,
   MeasuringUnit.cup,
   MeasuringUnit.us_cup,
-  MeasuringUnit.none
+  MeasuringUnit.none,
 ];
 
 export const MeasuringUnitOptionsHardItems = [
@@ -229,7 +171,7 @@ export const MeasuringUnitOptionsHardItems = [
   MeasuringUnit.item,
   MeasuringUnit.oz,
   MeasuringUnit.lb,
-  MeasuringUnit.none
+  MeasuringUnit.none,
 ];
 
 export const MeasuringUnitOptionsGranular = [
@@ -241,7 +183,7 @@ export const MeasuringUnitOptionsGranular = [
   MeasuringUnit.us_cup,
   MeasuringUnit.oz,
   MeasuringUnit.lb,
-  MeasuringUnit.none
+  MeasuringUnit.none,
 ];
 
 export const MeasuringUnitOptionsHardHomogeneous = [
@@ -249,9 +191,8 @@ export const MeasuringUnitOptionsHardHomogeneous = [
   MeasuringUnit.kg,
   MeasuringUnit.oz,
   MeasuringUnit.lb,
-  MeasuringUnit.none
+  MeasuringUnit.none,
 ];
-
 
 export const ProductTypeOptions = [
   ProductType.fluid,
@@ -259,31 +200,52 @@ export const ProductTypeOptions = [
   ProductType.herb,
   ProductType.hardItem,
   ProductType.hardHomogenious,
-  ProductType.granular
+  ProductType.granular,
 ];
 
 export enum ProductTypeText {
-  'рідкий продукт' = 1,
-  'подрібнена спеція',
-  'трава',
-  'твердий продукт',
-  'твердий однорідний',
-  'сипучий продукт (крупа, борошно)'
+  "рідкий продукт" = 1,
+  "подрібнена спеція",
+  "трава",
+  "твердий продукт",
+  "твердий однорідний",
+  "сипучий продукт (крупа, борошно)",
 }
 
-export const emptyRecipy: NewRecipy = {
-  name: "",
-  ingrediends: [],
-  // complexity: Complexity.simple,
-  steps: [],
-  // type: [],
-  // photo: "",
-  // author: "",
-  // createdOn: 0,
-  isSplitIntoGroups: false,
-  // isBaseRecipy: false,
-  // notApproved: true,
-  // source: "",
-  // isCheckedAndApproved: false,
-  // portionSize: 200,
-};
+export const ProductSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  density: z.number(),
+  grInOneItem: z.number().optional(),
+  calories: z.number(),
+  defaultUnit: z.nativeEnum(MeasuringUnit),
+  type: z.nativeEnum(ProductType),
+  sizeChangeCoef: z.number(),
+});
+
+export type Product = z.infer<typeof ProductSchema>;
+
+export const IngredientSchema = z.object({
+  productId: z.string(),
+  amount: z.number(),
+  defaultUnit: z.nativeEnum(MeasuringUnit),
+  group: z.string().optional(),
+  productName: z.string().optional(),
+});
+
+export type Ingredient = z.infer<typeof IngredientSchema>;
+
+export const PreparationStepSchema = z.object({
+  description: z.string(),
+  timeActive: z.number(),
+  timePassive: z.number(),
+});
+
+export type PreparationStep = z.infer<typeof PreparationStepSchema>;
+
+export const NewRecipySchema = z.object({
+  name: z.string(),
+  ingrediends: z.array(IngredientSchema),
+  steps: z.array(PreparationStepSchema),
+  isSplitIntoGroups: z.boolean(),
+});
