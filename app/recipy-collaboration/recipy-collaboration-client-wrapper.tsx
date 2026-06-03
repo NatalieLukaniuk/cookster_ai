@@ -131,10 +131,9 @@ export default function RecipyCollaboration({
         defaultOpen={true}
         header={ChatHeader}
         input={{
-          textArea: "pr-0 rounded-none text-xs",
-          className: "px-0",
+            className: "px-0",
         }}
-        className="p-0"
+        
       ></CopilotSidebar>
     </div>
   );
