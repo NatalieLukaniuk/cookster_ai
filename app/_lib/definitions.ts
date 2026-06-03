@@ -218,8 +218,8 @@ export const ProductSchema = z.object({
   density: z.number(),
   grInOneItem: z.number().optional(),
   calories: z.number(),
-  defaultUnit: z.nativeEnum(MeasuringUnit),
-  type: z.nativeEnum(ProductType),
+  defaultUnit: z.enum(MeasuringUnit),
+  type: z.enum(ProductType),
   sizeChangeCoef: z.number(),
 });
 
@@ -228,7 +228,7 @@ export type Product = z.infer<typeof ProductSchema>;
 export const IngredientSchema = z.object({
   productId: z.string(),
   amount: z.number(),
-  defaultUnit: z.nativeEnum(MeasuringUnit),
+  defaultUnit: z.enum(MeasuringUnit),
   group: z.string().optional(),
   productName: z.string().optional(),
 });
