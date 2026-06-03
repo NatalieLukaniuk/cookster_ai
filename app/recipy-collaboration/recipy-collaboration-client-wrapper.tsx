@@ -21,11 +21,13 @@ export default function RecipyCollaboration({
 }: {
   products: Product[];
 }) {
-  const [recipy, setRecipy] = useState<NewRecipy>(mockRecipy);
-  const [isRecipyInitiated, setIsRecipyInitiated] = useState(false);
+  const [recipy, setRecipy] = useState<NewRecipy | null>(null);
 
   function updateRecipy(updates: Partial<NewRecipy>) {
-    setRecipy((prev) => ({ ...prev, ...updates }));
+    setRecipy((prev: NewRecipy | null) => {
+      if (!prev) return { ...emptyRecipy, ...updates };
+      return { ...prev, ...updates };
+    });
   }
 
   useAgentContext({
@@ -43,10 +45,26 @@ export default function RecipyCollaboration({
     }
   });
 
+  const mainPanel = recipy ? (
+    <FullRecipyCard recipy={recipy} />
+  ) : (
+      <div className="flex flex-col items-center justify-center h-full">
+        <h2 className="text-2xl font-semibold text-zinc-950 dark:text-white mb-4">
+          Вітаю! Я допоможу вам створити рецепт на основі ваших продуктів. Просто скажіть мені, що ви хочете приготувати, або виберіть продукти зі списку, і я запропоную вам рецепт!
+        </h2>
+        <button
+          onClick={() => setRecipy(emptyRecipy)}
+          className="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700"
+        >
+          Почати створення рецепту
+        </button>
+      </div>
+  );
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
-        <FullRecipyCard recipy={recipy} />
+        {mainPanel}
       </main>
       <CopilotSidebar
         labels={{
