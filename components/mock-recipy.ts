@@ -53,25 +53,21 @@ export const mockRecipy: NewRecipy = {
   complexity: Complexity.medium,
   steps: [
     {
-      id: 1,
       description: "Розігрійте духовку до 200°C. Курячі стегенця натріть сумішшю солі, перцю та подрібненого часнику.",
       timeActive: 15,
       timePassive: 2,
     },
     {
-      id: 2,
       description: "Покладіть курку та овочі у форму для запікання. Додайте трохи оливкової олії та перемішайте.",
       timeActive: 10,
       timePassive: 0,
     },
     {
-      id: 3,
       description: "Запікайте 45-50 хвилин, поки курка не стане золотистою, а овочі м’якими.",
       timeActive: 0,
       timePassive: 50,
     },
     {
-      id: 4,
       description: "Дістаньте з духовки, дайте постояти 5 хвилин і подавайте гарячим.",
       timeActive: 5,
       timePassive: 0,
@@ -79,14 +75,12 @@ export const mockRecipy: NewRecipy = {
   ],
   type: [DishType["другі страви"] as DishType],
   photo: "",
-  author: "Olena",
+  author: "gg@gmail.com",
   createdOn: Date.now(),
-  clonedBy: "Марія",
-  originalRecipy: "Запечена курка з овочами від бабусі",
   isSplitIntoGroups: true,
   isBaseRecipy: false,
   notApproved: false,
-  source: "Сімейна книга рецептів",
+  source: "https://dojo.ag-ui.com/microsoft-agent-framework-python/feature/tool_based_generative_ui?file=agent.ts&view=code",
   isCheckedAndApproved: true,
-  portionSize: 4,
+  portionSize: 400,
 };

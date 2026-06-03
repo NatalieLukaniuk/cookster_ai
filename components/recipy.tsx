@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  emptyRecipy,
+  DishType,
   Ingredient,
   MeasuringUnitText,
   NewRecipy,
 } from "@/app/_lib/definitions";
-import { useState } from "react";
+import { Badge } from "./ui/badge";
 
 function formatAmount(amount: number) {
   if (!Number.isFinite(amount)) return "";
@@ -20,7 +20,7 @@ function formatIngredientLabel(ingredient: Ingredient) {
     ? MeasuringUnitText[ingredient.defaultUnit]
     : "";
   const name =
-    ingredient.productName?.trim() || ingredient.productId || "Інгредієнт";
+    ingredient.ingredient?.trim() || ingredient.product || "Інгредієнт";
 
   return [name, amount, unit].filter(Boolean).join(" ");
 }
@@ -46,6 +46,7 @@ function formatStepTime(step: { timeActive: number; timePassive: number }) {
 }
 
 export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
+  console.log("Rendering FullRecipyCard with recipy:", recipy);
   const ingredientGroups = groupIngredients(recipy.ingrediends);
   const totalTime = recipy.steps.reduce(
     (sum, step) => sum + step.timeActive + step.timePassive,
@@ -55,10 +56,34 @@ export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
   return (
     <article className="overflow-hidden w-full rounded-3xl border border-zinc-200 bg-white shadow-sm hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
       <div className="space-y-6 p-6">
-        <div>
-          <h2 className="text-2xl font-semibold text-zinc-950 dark:text-white">
-            {recipy.name}
-          </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-40">
+          <div>
+            <h2 className="text-2xl font-semibold text-zinc-950 dark:text-white">
+              {recipy.name}
+            </h2>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+              {recipy.source ? (
+                <a
+                  href={recipy.source}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  Джерело рецепту: {recipy.source}
+                </a>
+              ) : (
+                "Джерело не вказано"
+              )}
+            </p>
+          </div>
+
+          <div>
+            {recipy.type.map((type) => (
+              <Badge key={type} className=" text-green-800 text-xs">
+                {DishType[type]}
+              </Badge>
+            ))}
+          </div>
         </div>
 
         <section className="space-y-4">
@@ -68,7 +93,7 @@ export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
                 Інгредієнти
               </h3>
               <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                {recipy.ingrediends?.length ?? 0} шт.
+                Рекомендована порція: {recipy.portionSize ?? 0} грамів
               </span>
             </div>
             <div className="flex gap-10 sm:flex-row flex-col">
@@ -85,7 +110,6 @@ export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
                         key={`${group}-${index}`}
                         className="flex items-start gap-3"
                       >
-                        
                         <span>{formatIngredientLabel(ingredient)}</span>
                       </li>
                     ))}
@@ -97,7 +121,7 @@ export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
 
           <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
             <div className="mb-4 flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-3 justify-between w-full">
                 <h3 className="text-lg font-semibold text-zinc-950 dark:text-white">
                   Приготування
                 </h3>

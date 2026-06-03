@@ -226,11 +226,12 @@ export const ProductSchema = z.object({
 export type Product = z.infer<typeof ProductSchema>;
 
 export const IngredientSchema = z.object({
-  productId: z.string(),
+  product: z.string(),
   amount: z.number(),
   defaultUnit: z.enum(MeasuringUnit),
   group: z.string().optional(),
-  productName: z.string().optional(),
+  ingredient: z.string().optional(),
+  prep: z.array(z.string()).optional(),
 });
 
 export type Ingredient = z.infer<typeof IngredientSchema>;
@@ -250,13 +251,14 @@ export const NewRecipySchema = z.object({
   isSplitIntoGroups: z.boolean(),
   complexity: z.enum(Complexity).default(Complexity.simple),
   type: z.array(z.enum(DishType)),
-  photo: z.string().optional(),
-  author: z.email(),
+  photo: z.url().optional(),
+  author: z.email().default("admin@cookster.net"),
   createdOn: z.number(),
   isBaseRecipy: z.boolean().default(false),
   source: z.url().optional(),
-  portionSize: z.number().default(200),
-
+  portionSize: z.number().default(200).describe("Recommended portion size in grams"),
+  notApproved: z.boolean().default(false),
+  isCheckedAndApproved: z.boolean().default(false),
 });
 
 export type NewRecipy = z.infer<typeof NewRecipySchema>;
@@ -269,9 +271,11 @@ export const emptyRecipy: NewRecipy = {
   complexity: Complexity.simple,
   type: [],
   photo: "",
-  author: "",
-  createdOn: 0,
+  author: "admin@cookster.net",
+  createdOn: Date.now(),
   isBaseRecipy: false,
   source: "",
   portionSize: 200,
+  notApproved: false,
+  isCheckedAndApproved: false,
 };
