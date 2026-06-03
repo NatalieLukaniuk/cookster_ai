@@ -22,7 +22,7 @@ function formatIngredientLabel(ingredient: Ingredient) {
   const name =
     ingredient.productName?.trim() || ingredient.productId || "Інгредієнт";
 
-  return [amount, unit, name].filter(Boolean).join(" ");
+  return [name, amount, unit].filter(Boolean).join(" ");
 }
 
 function groupIngredients(ingredients: Ingredient[]) {
@@ -45,9 +45,7 @@ function formatStepTime(step: { timeActive: number; timePassive: number }) {
   return active || passive || "-";
 }
 
-export default function FullRecipyCard() {
-  const [recipy] = useState<NewRecipy>(emptyRecipy);
-
+export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
   const ingredientGroups = groupIngredients(recipy.ingrediends);
   const totalTime = recipy.steps.reduce(
     (sum, step) => sum + step.timeActive + step.timePassive,
@@ -55,7 +53,7 @@ export default function FullRecipyCard() {
   );
 
   return (
-    <article className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
+    <article className="overflow-hidden w-full rounded-3xl border border-zinc-200 bg-white shadow-sm hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
       <div className="space-y-6 p-6">
         <div>
           <h2 className="text-2xl font-semibold text-zinc-950 dark:text-white">
@@ -73,36 +71,35 @@ export default function FullRecipyCard() {
                 {recipy.ingrediends?.length ?? 0} шт.
               </span>
             </div>
-
-            {Object.entries(ingredientGroups).map(([group, items]) => (
-              <div key={group} className="space-y-3">
-                {group !== "Основні" ? (
-                  <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400">
-                    {group}
-                  </h4>
-                ) : null}
-                <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
-                  {items.map((ingredient, index) => (
-                    <li
-                      key={`${group}-${index}`}
-                      className="flex items-start gap-3"
-                    >
-                      <span className="mt-1 min-w-6 text-right font-medium text-zinc-500 dark:text-zinc-400">
-                        {index + 1}.
-                      </span>
-                      <span>{formatIngredientLabel(ingredient)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div className="flex gap-10 sm:flex-row flex-col">
+              {Object.entries(ingredientGroups).map(([group, items]) => (
+                <div key={group} className="space-y-3">
+                  {group !== "Основні" ? (
+                    <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-600 dark:text-zinc-400">
+                      {group}
+                    </h4>
+                  ) : null}
+                  <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
+                    {items.map((ingredient, index) => (
+                      <li
+                        key={`${group}-${index}`}
+                        className="flex items-start gap-3"
+                      >
+                        
+                        <span>{formatIngredientLabel(ingredient)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-zinc-950 dark:text-white">
-                  Підготовка
+                  Приготування
                 </h3>
                 {typeof totalTime === "number" ? (
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">

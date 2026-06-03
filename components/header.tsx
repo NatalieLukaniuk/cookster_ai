@@ -10,7 +10,7 @@ export default function Header() {
         href="/"
         className="text-2xl font-bold text-zinc-950 dark:text-white"
       >
-        Cookster
+        Cookster AI: додайте рецепт разом з ШІ! 🍳
       </Link>
         {userEmail && (
           <p className="text-sm text-muted-foreground">

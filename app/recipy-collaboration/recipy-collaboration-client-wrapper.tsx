@@ -1,7 +1,10 @@
 "use client";
-import { CopilotSidebar, useAgentContext } from "@copilotkit/react-core/v2";
+import { CopilotSidebar, useAgentContext, useFrontendTool } from "@copilotkit/react-core/v2";
 import { useUserEmail } from "../_lib/UserContext";
-import { Product } from "../_lib/definitions";
+import { emptyRecipy, NewRecipy, NewRecipySchema, Product } from "../_lib/definitions";
+import { useState } from "react";
+import FullRecipyCard from "@/components/recipy";
+import { mockRecipy } from "@/components/mock-recipy";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -18,21 +21,32 @@ export default function RecipyCollaboration({
 }: {
   products: Product[];
 }) {
+  const [recipy, setRecipy] = useState<NewRecipy>(mockRecipy);
+  const [isRecipyInitiated, setIsRecipyInitiated] = useState(false);
+
+  function updateRecipy(updates: Partial<NewRecipy>) {
+    setRecipy((prev) => ({ ...prev, ...updates }));
+  }
 
   useAgentContext({
-    description: "An array of the products that can be used in the recipe. Each product has a name property that should be used when the user asks to add a product to the recipe.",
-    value: products,
+    description:
+      "An array of the products that can be used in the recipe. A recipy that is being collaboratively created by the user and the AI. The AI can update the recipy based on the user's requests and suggestions.",
+    value: { products, recipy },
+  });
+
+  useFrontendTool({
+    name: "updateRecipy",
+    description: "Update the recipy with the given updates",
+    parameters: NewRecipySchema,
+    handler: async (updates) => {
+      updateRecipy(updates);
+    }
   });
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <h1 className="text-4xl font-bold text-zinc-950 dark:text-white mb-8">
-          Рецепт спільної роботи
-        </h1>
-        <p className="text-lg text-zinc-700 dark:text-zinc-300 mb-4">
-          Створіть та редагуйте рецепти разом з іншими користувачами
-        </p>
+      <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
+        <FullRecipyCard recipy={recipy} />
       </main>
       <CopilotSidebar
         labels={{
