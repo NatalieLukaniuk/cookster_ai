@@ -9,7 +9,7 @@ import { mockRecipy } from "@/components/mock-recipy";
 const ChatHeader = () => {
   const userEmail = useUserEmail();
   return (
-    <div className="bg-green-100 text-green-800 p-4 text-center">
+    <div className="text-green-800 p-4 text-center">
       {userEmail && <span>{userEmail}</span>}
       {!userEmail && <span>Noname</span>}, давайте готувати разом! 🍳
     </div>
@@ -50,17 +50,17 @@ export default function RecipyCollaboration({
       </main>
       <CopilotSidebar
         labels={{
-          welcomeMessageText: "How can I help you today?",
-          chatInputPlaceholder: "Ask for help with your recipe...",
+          welcomeMessageText: "Let me help you create a recipe!",
+          chatInputPlaceholder: "Paste your product list or ask for suggestions...",
           chatDisclaimerText: "AI responses may be inaccurate.",
         }}
         defaultOpen={true}
         header={ChatHeader}
         input={{
           textArea: "pr-0 rounded-none text-xs",
-          className: "px-0 bg-green-100",
+          className: "px-0",
         }}
-        className="p-0 bg-green-100"
+        className="p-0"
       ></CopilotSidebar>
     </div>
   );
