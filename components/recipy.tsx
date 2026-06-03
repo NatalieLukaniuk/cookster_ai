@@ -1,10 +1,10 @@
 "use client";
 
 import {
+  emptyRecipy,
   Ingredient,
   MeasuringUnitText,
   NewRecipy,
-  emptyRecipy,
 } from "@/app/_lib/definitions";
 import { useState } from "react";
 
@@ -22,9 +22,7 @@ function formatIngredientLabel(ingredient: Ingredient) {
   const name =
     ingredient.productName?.trim() || ingredient.productId || "Інгредієнт";
 
-  return (
-    [amount, unit, name].filter(Boolean).join(" ") 
-  );
+  return [amount, unit, name].filter(Boolean).join(" ");
 }
 
 function groupIngredients(ingredients: Ingredient[]) {
@@ -59,13 +57,11 @@ export default function FullRecipyCard() {
   return (
     <article className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
       <div className="space-y-6 p-6">
-
         <div>
           <h2 className="text-2xl font-semibold text-zinc-950 dark:text-white">
             {recipy.name}
           </h2>
         </div>
-
 
         <section className="space-y-4">
           <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
@@ -114,7 +110,6 @@ export default function FullRecipyCard() {
                   </p>
                 ) : null}
               </div>
-
             </div>
 
             <ol className="space-y-4 text-sm text-zinc-700 dark:text-zinc-300">

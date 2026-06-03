@@ -249,3 +249,12 @@ export const NewRecipySchema = z.object({
   steps: z.array(PreparationStepSchema),
   isSplitIntoGroups: z.boolean(),
 });
+
+export type NewRecipy = z.infer<typeof NewRecipySchema>;
+
+export const emptyRecipy: NewRecipy = {
+  name: "",
+  ingrediends: [],
+  steps: [],
+  isSplitIntoGroups: false,
+};
