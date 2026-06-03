@@ -5,6 +5,7 @@ import { CopilotKit } from "@copilotkit/react-core";
 import "@copilotkit/react-ui/v2/styles.css";
 import { cn } from "@/lib/utils";
 import { UserProvider } from "./_lib/UserContext";
+import Link from "next/link";
 
 const geistHeading = Geist({ subsets: ["latin"], variable: "--font-heading" });
 
@@ -49,9 +50,17 @@ export default function RootLayout({
           publicApiKey="ck_pub_0de59986ce5a6f0af5fbb1a2841a4b56"
           publicLicenseKey="ck_pub_0de59986ce5a6f0af5fbb1a2841a4b56"
         >
-          <UserProvider> {children} </UserProvider>
+          <UserProvider>
+            <header className="w-full py-4 px-6 bg-white dark:bg-black shadow-sm">
+              <Link href="/" className="text-2xl font-bold text-zinc-950 dark:text-white">
+                Cookster
+              </Link>
+             </header>
+             {children}
+              </UserProvider>
         </CopilotKit>
       </body>
     </html>
   );
 }
+              

@@ -44,6 +44,12 @@ export default function LoginForm() {
           >
             Try the recipe chat assistant
           </Link>
+          <Link
+            href="/recipy-collaboration"
+            className="text-sm text-blue-500 hover:underline"
+          >
+            Try the recipe collaboration assistant
+          </Link>
         </div>
       )}
       {!userEmail && (
