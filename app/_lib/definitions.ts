@@ -248,7 +248,7 @@ export const NewRecipySchema = z.object({
   name: z.string(),
   ingrediends: z.array(IngredientSchema),
   steps: z.array(PreparationStepSchema),
-  isSplitIntoGroups: z.boolean(),
+  isSplitIntoGroups: z.boolean().default(false),
   complexity: z.enum(Complexity).default(Complexity.simple),
   type: z.array(z.enum(DishType)),
   photo: z.url().optional(),

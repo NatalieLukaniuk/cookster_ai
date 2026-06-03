@@ -1,10 +1,22 @@
 "use client";
-import { CopilotSidebar, useAgentContext, useFrontendTool } from "@copilotkit/react-core/v2";
+import {
+  CopilotSidebar,
+  useAgentContext,
+  useConfigureSuggestions,
+  useFrontendTool,
+} from "@copilotkit/react-core/v2";
 import { useUserEmail } from "../_lib/UserContext";
-import { emptyRecipy, NewRecipy, NewRecipySchema, Product } from "../_lib/definitions";
+import {
+  DishType,
+  emptyRecipy,
+  NewRecipy,
+  NewRecipySchema,
+  Product,
+} from "../_lib/definitions";
 import { useState } from "react";
 import FullRecipyCard from "@/components/recipy";
-import { mockRecipy } from "@/components/mock-recipy";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -33,7 +45,7 @@ export default function RecipyCollaboration({
   useAgentContext({
     description:
       "An array of the products that can be used in the recipe. A recipy that is being collaboratively created by the user and the AI. The AI can update the recipy based on the user's requests and suggestions.",
-    value: { products, recipy },
+    value: { products, recipy, type: DishType },
   });
 
   useFrontendTool({
@@ -42,23 +54,67 @@ export default function RecipyCollaboration({
     parameters: NewRecipySchema,
     handler: async (updates) => {
       updateRecipy(updates);
-    }
+    },
   });
 
+  useConfigureSuggestions({
+    suggestions: [
+      { title: "Generate recipe of a salad", message: "Generate recipe of a salad" },
+      { title: "Generate recipe of a soup", message: "Generate recipe of a soup" },
+      { title: "Generate recipe of a dessert", message: "Generate recipe of a dessert" },
+    ],
+    available: "before-first-message",
+  });
+
+  useConfigureSuggestions({
+    instructions:
+      "Suggest follow-up questions based on the conversation so far. " +
+      "Focus on actionable next steps the user might want to take. Provide titles in Ukrainian. ",
+    minSuggestions: 1,
+    available: "after-first-message",
+  });
+
+  function saveRecipy() {
+    // Here you would typically send the recipy to your backend to save it in a database
+    console.log("Saving recipy:", recipy);
+  }
+
   const mainPanel = recipy ? (
-    <FullRecipyCard recipy={recipy} />
+    <>
+      <FullRecipyCard recipy={recipy} />
+      <Button
+        onClick={saveRecipy}
+        className="mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700"
+      >
+        Зберегти
+      </Button>
+    </>
   ) : (
-      <div className="flex flex-col items-center justify-center h-full">
-        <h2 className="text-2xl font-semibold text-zinc-950 dark:text-white mb-4">
-          Вітаю! Я допоможу вам створити рецепт на основі ваших продуктів. Просто скажіть мені, що ви хочете приготувати, або виберіть продукти зі списку, і я запропоную вам рецепт!
+    <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-9">
+      <Image
+        src="/humster_sm.png"
+        alt="Humster"
+        className="mb-4"
+        width={100}
+        height={178}
+      />
+      <div className="flex flex-col gap-4">
+        <h2 className="text-2xl font-semibold text-center text-zinc-950 dark:text-white mb-4">
+          Вітаю, я ваш помічник у створенні рецептів! 🍳
         </h2>
-        <button
-          onClick={() => setRecipy(emptyRecipy)}
-          className="px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700"
-        >
-          Почати створення рецепту
-        </button>
+        <h2 className="text-xl text-left font-semibold text-zinc-950 dark:text-white">
+          Що я вмію:
+        </h2>
+        <ul className="flex flex-col gap-2 mt-4 text-left text-zinc-700 dark:text-zinc-300">
+          <li>
+            📋 Створювати рецепти на основі текстового опису або списку
+            інгредієнтів
+          </li>
+          <li>🔄 Редагувати та оновлювати рецепти на основі ваших побажань</li>
+          <li>🍽️ Пропонувати рецепти на основі наявних у вас інгредієнтів</li>
+        </ul>
       </div>
+    </div>
   );
 
   return (
@@ -68,8 +124,8 @@ export default function RecipyCollaboration({
       </main>
       <CopilotSidebar
         labels={{
-          welcomeMessageText: "Let me help you create a recipe!",
-          chatInputPlaceholder: "Paste your product list or ask for suggestions...",
+          welcomeMessageText: "Вставте ваш рецепт в чат і я допоможу його покращити!",
+          chatInputPlaceholder: "",
           chatDisclaimerText: "AI responses may be inaccurate.",
         }}
         defaultOpen={true}
