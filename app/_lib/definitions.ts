@@ -248,6 +248,15 @@ export const NewRecipySchema = z.object({
   ingrediends: z.array(IngredientSchema),
   steps: z.array(PreparationStepSchema),
   isSplitIntoGroups: z.boolean(),
+  complexity: z.enum(Complexity).default(Complexity.simple),
+  type: z.array(z.enum(DishType)),
+  photo: z.string().optional(),
+  author: z.email(),
+  createdOn: z.number(),
+  isBaseRecipy: z.boolean().default(false),
+  source: z.url().optional(),
+  portionSize: z.number().default(200),
+
 });
 
 export type NewRecipy = z.infer<typeof NewRecipySchema>;
@@ -257,4 +266,12 @@ export const emptyRecipy: NewRecipy = {
   ingrediends: [],
   steps: [],
   isSplitIntoGroups: false,
+  complexity: Complexity.simple,
+  type: [],
+  photo: "",
+  author: "",
+  createdOn: 0,
+  isBaseRecipy: false,
+  source: "",
+  portionSize: 200,
 };
