@@ -226,11 +226,11 @@ export const ProductSchema = z.object({
 export type Product = z.infer<typeof ProductSchema>;
 
 export const IngredientSchema = z.object({
-  product: z.string(),
+  product: z.string().describe("ID of the product in the database. Must match id of one of the products from the products array."),
   amount: z.number(),
   defaultUnit: z.enum(MeasuringUnit),
   group: z.string().optional(),
-  ingredient: z.string().optional(),
+  ingredient: z.string().optional().describe("Must match the name of the product in the database."),
   prep: z.array(z.string()).optional(),
 });
 

@@ -17,6 +17,7 @@ import { useState } from "react";
 import FullRecipyCard from "@/components/recipy";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { prepareReciyForDatabase } from "../_lib/utils";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -34,6 +35,7 @@ export default function RecipyCollaboration({
   products: Product[];
 }) {
   const [recipy, setRecipy] = useState<NewRecipy | null>(null);
+  const userEmail = useUserEmail();
 
   function updateRecipy(updates: Partial<NewRecipy>) {
     setRecipy((prev: NewRecipy | null) => {
@@ -43,8 +45,18 @@ export default function RecipyCollaboration({
   }
 
   useAgentContext({
-    description:
-      "An array of the products that can be used in the recipe. A recipy that is being collaboratively created by the user and the AI. The AI can update the recipy based on the user's requests and suggestions.",
+    description: `Products is an array of the products that can be used in the recipe.
+    Thouroughly check the products array, majority of common products is available.
+If there is no needed product available, look for alternatives.
+If no alternatives, do not include the ingredient in the recipe.
+Always check whether the ingredient id is correct and its name matches the product name in the products array.
+Thoroughly check the measirung units, prefer the unit that is defined as default for the product in the products array.
+Do not add ingredients that are not in the array.
+A recipy that is being collaboratively created by the user and the AI.
+The AI can update the recipy based on the user's requests and suggestions.
+Do not include ingredient amound in the preparation steps, only in the ingredients list.
+The recipy should be in Ukrainian.
+      `,
     value: { products, recipy, type: DishType },
   });
 
@@ -59,9 +71,18 @@ export default function RecipyCollaboration({
 
   useConfigureSuggestions({
     suggestions: [
-      { title: "Generate recipe of a salad", message: "Generate recipe of a salad" },
-      { title: "Generate recipe of a soup", message: "Generate recipe of a soup" },
-      { title: "Generate recipe of a dessert", message: "Generate recipe of a dessert" },
+      {
+        title: "Generate recipe of a salad",
+        message: "Generate recipe of a salad",
+      },
+      {
+        title: "Generate recipe of a soup",
+        message: "Generate recipe of a soup",
+      },
+      {
+        title: "Generate recipe of a dessert",
+        message: "Generate recipe of a dessert",
+      },
     ],
     available: "before-first-message",
   });
@@ -74,16 +95,23 @@ export default function RecipyCollaboration({
     available: "after-first-message",
   });
 
-  function saveRecipy() {
+  function saveRecipy(userEmail: string | null) {
+    if (!recipy) return;
     // Here you would typically send the recipy to your backend to save it in a database
-    console.log("Saving recipy:", recipy);
+    const preparedForDb = prepareReciyForDatabase(recipy, products);
+    const fixxedFields = {
+      ...preparedForDb,
+      createdOn: Date.now(),
+      author: userEmail || "test@gmail.com",
+    };
+    console.log("Saving recipy to database:", fixxedFields);
   }
 
   const mainPanel = recipy ? (
     <>
       <FullRecipyCard recipy={recipy} />
       <Button
-        onClick={saveRecipy}
+        onClick={() => saveRecipy(userEmail)}
         className="mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700"
       >
         Зберегти
@@ -124,16 +152,16 @@ export default function RecipyCollaboration({
       </main>
       <CopilotSidebar
         labels={{
-          welcomeMessageText: "Вставте ваш рецепт в чат і я допоможу його покращити!",
+          welcomeMessageText:
+            "Вставте ваш рецепт в чат і я допоможу його покращити!",
           chatInputPlaceholder: "",
           chatDisclaimerText: "AI responses may be inaccurate.",
         }}
         defaultOpen={true}
         header={ChatHeader}
         input={{
-            className: "px-0",
+          className: "px-0",
         }}
-        
       ></CopilotSidebar>
     </div>
   );

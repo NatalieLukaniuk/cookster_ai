@@ -1,4 +1,4 @@
-import { Ingredient, MeasuringUnit, Product } from "./definitions";
+import { Ingredient, MeasuringUnit, NewRecipy, Product } from "./definitions";
 
 export const mapProductsToArray = (res: object) => {
   const array = Object.entries(res);
@@ -169,7 +169,12 @@ export function getCalorificValue(
   ingr: Ingredient,
   allProducts: Product[]
 ): number {
-  return allProducts.find((product) => product.id == ingr.product)!.calories;
+  const found = allProducts.find((product) => product.id == ingr.product);
+  if (!found) {
+    console.warn(`Product with id ${ingr.product} and name ${ingr.ingredient} not found in products array.`);
+    return 0;
+  }
+  return found.calories;
 }
 
 export function countRecipyTotalCalories(ingreds: Ingredient[], allProducts: Product[]) {
@@ -178,4 +183,26 @@ export function countRecipyTotalCalories(ingreds: Ingredient[], allProducts: Pro
       calories += ingr.amount / 100 * getCalorificValue(ingr, allProducts);
     });
     return calories;
+  }
+
+  export function countRecipyCalorificValue(ingreds: Ingredient[], allProducts: Product[]) {
+    let calories = 0;
+    let totalAmount = 0;
+    ingreds.forEach((ingr) => {
+      totalAmount += ingr.amount;
+      calories += ingr.amount * getCalorificValue(ingr, allProducts);
+    });
+    return calories / totalAmount;
+  }
+
+  export function prepareReciyForDatabase(recipy: NewRecipy, allProducts: Product[]) {
+    const recipyWithIngredsInGrams = {
+      ...recipy,
+      ingrediends: recipy.ingrediends.map((ingr: Ingredient) => ({
+        ...ingr,
+        amount: transformToGr(ingr.product, ingr.amount, ingr.defaultUnit, allProducts)
+      }))
+    };
+    const calorificValue = countRecipyCalorificValue(recipyWithIngredsInGrams.ingrediends, allProducts);
+    return { ...recipyWithIngredsInGrams, calorificValue };
   }
