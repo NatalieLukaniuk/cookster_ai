@@ -6,7 +6,7 @@ import {
   useConfigureSuggestions,
   useFrontendTool,
 } from "@copilotkit/react-core/v2";
-import { useUserEmail } from "../_lib/UserContext";
+import { useSetUserInfo, useUserEmail } from "../_lib/UserContext";
 import {
   DishType,
   emptyRecipy,
@@ -17,13 +17,15 @@ import {
   ProductSchema,
   ProductTypeText,
 } from "../_lib/definitions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FullRecipyCard from "@/components/recipy";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { prepareReciyForDatabase } from "../_lib/utils";
 import { database } from "../_lib/firebase";
 import { push, ref, set } from "firebase/database";
+import { LOCAL_STORAGE_USER_EMAIL_KEY } from "@/components/forms/login-form";
+import { redirect } from "next/navigation";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -66,6 +68,18 @@ export default function RecipyCollaboration({
 }) {
   const [recipy, setRecipy] = useState<NewRecipy | null>(null);
   const userEmail = useUserEmail();
+  const setUserEmail = useSetUserInfo();
+
+  useEffect(() => {
+    if (!userEmail) {
+      const storedEmail = localStorage.getItem(LOCAL_STORAGE_USER_EMAIL_KEY);
+      if (storedEmail) {
+        setUserEmail(storedEmail);
+      } else {
+        redirect('/')
+      }
+    }
+  }, []);
 
   function updateRecipy(updates: Partial<NewRecipy>) {
     setRecipy((prev: NewRecipy | null) => {
@@ -146,14 +160,14 @@ The recipy should be in Ukrainian.
       createdOn: Date.now(),
       author: userEmail || "test@gmail.com",
     };
-    const validationResult = NewRecipySchema.safeParse(readyToSave)
+    const validationResult = NewRecipySchema.safeParse(readyToSave);
     const isValid = validationResult.success;
     if (isValid) {
       const recipiesRef = ref(database, "recipies");
-    const newRecipeRef = push(recipiesRef);
-    const result = await set(newRecipeRef, readyToSave);
+      const newRecipeRef = push(recipiesRef);
+      const result = await set(newRecipeRef, readyToSave);
     } else {
-      console.log(validationResult.error.message)
+      console.log(validationResult.error.message);
     }
   }
 
