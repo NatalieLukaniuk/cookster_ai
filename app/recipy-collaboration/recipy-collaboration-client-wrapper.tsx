@@ -202,7 +202,7 @@ The recipy should be in Ukrainian.
             📋 Створювати рецепти на основі текстового опису або списку
             інгредієнтів
           </li>
-          <li>🔄 Редагувати та оновлювати рецепти на основі ваших побажань</li>
+          <li>🔄 Редагувати та вдосконалювати рецепти на основі ваших побажань</li>
           <li>🍽️ Пропонувати рецепти на основі наявних у вас інгредієнтів</li>
         </ul>
       </div>
@@ -217,7 +217,7 @@ The recipy should be in Ukrainian.
       <CopilotSidebar
         labels={{
           welcomeMessageText:
-            "Вставте ваш рецепт в чат і я допоможу його покращити!",
+            "Вставте ваш рецепт в чат і я допоможу його зберегти в базу даних cookster!",
           chatInputPlaceholder: "",
           chatDisclaimerText: "AI responses may be inaccurate.",
         }}
