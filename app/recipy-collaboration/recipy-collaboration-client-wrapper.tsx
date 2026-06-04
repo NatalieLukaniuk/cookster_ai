@@ -26,6 +26,7 @@ import { database } from "../_lib/firebase";
 import { push, ref, set } from "firebase/database";
 import { LOCAL_STORAGE_USER_EMAIL_KEY } from "@/components/forms/login-form";
 import { redirect } from "next/navigation";
+import LoadingOverlay from "@/components/ui/loading-overlay";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -67,6 +68,7 @@ export default function RecipyCollaboration({
   products: Product[];
 }) {
   const [recipy, setRecipy] = useState<NewRecipy | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const userEmail = useUserEmail();
   const setUserEmail = useSetUserInfo();
 
@@ -153,7 +155,9 @@ The recipy should be in Ukrainian.
 
   async function saveRecipy(userEmail: string | null) {
     if (!recipy) return;
-    // Here you would typically send the recipy to your backend to save it in a database
+
+    setIsLoading(true);
+
     const preparedForDb = prepareReciyForDatabase(recipy, products);
     const readyToSave = {
       ...preparedForDb,
@@ -162,12 +166,13 @@ The recipy should be in Ukrainian.
     };
     const validationResult = NewRecipySchema.safeParse(readyToSave);
     const isValid = validationResult.success;
+
     if (isValid) {
       const recipiesRef = ref(database, "recipies");
       const newRecipeRef = push(recipiesRef);
-      const result = await set(newRecipeRef, readyToSave);
+      await set(newRecipeRef, readyToSave).catch(() => setIsLoading(false)).then(() => setIsLoading(false)); //TODO add success/failure notifications
     } else {
-      console.log(validationResult.error.message);
+      setIsLoading(false);
     }
   }
 
@@ -183,6 +188,7 @@ The recipy should be in Ukrainian.
     </div>
   ) : (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-9">
+
       <Image
         src="/humster_sm.png"
         alt="Humster"
@@ -210,6 +216,8 @@ The recipy should be in Ukrainian.
   );
 
   return (
+    <>
+    
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
         {mainPanel}
@@ -228,5 +236,8 @@ The recipy should be in Ukrainian.
         }}
       ></CopilotSidebar>
     </div>
+    <LoadingOverlay isLoading={isLoading}/> 
+    </>
+    
   );
 }
