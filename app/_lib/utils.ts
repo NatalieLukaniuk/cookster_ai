@@ -195,10 +195,33 @@ export function countRecipyTotalCalories(ingreds: Ingredient[], allProducts: Pro
     return calories / totalAmount;
   }
 
+  function fixIngredId(ingredient: Ingredient, allProducts: Product[]){
+    const correctId = allProducts.find(item => item.name === ingredient.ingredient)?.id;
+    if(correctId !== ingredient.product){
+      console.log('fixed id for ' + ingredient.ingredient)
+    }
+    if(correctId){
+      return {
+        ...ingredient,
+        product: correctId
+      }
+    } else {
+      console.log('no correct id for ' + ingredient.ingredient)
+      return {
+        ...ingredient,
+        product: ''
+      }
+    }
+  }
+
   export function prepareReciyForDatabase(recipy: NewRecipy, allProducts: Product[]) {
-    const recipyWithIngredsInGrams = {
+    const recipyWithFixedIngredIds = {
       ...recipy,
-      ingrediends: recipy.ingrediends.map((ingr: Ingredient) => ({
+      ingrediends: recipy.ingrediends.map((ingr: Ingredient) => fixIngredId(ingr, allProducts))
+    }
+    const recipyWithIngredsInGrams = {
+      ...recipyWithFixedIngredIds,
+      ingrediends: recipyWithFixedIngredIds.ingrediends.map((ingr: Ingredient) => ({
         ...ingr,
         amount: transformToGr(ingr.product, ingr.amount, ingr.defaultUnit, allProducts)
       }))
