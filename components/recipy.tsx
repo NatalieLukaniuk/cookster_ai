@@ -25,7 +25,9 @@ function formatIngredientLabel(ingredient: Ingredient) {
   return [name, amount, unit].filter(Boolean).join(" ");
 }
 
-function groupIngredients(ingredients: Ingredient[]): Record<string, Ingredient[]> {
+function groupIngredients(
+  ingredients: Ingredient[],
+): Record<string, Ingredient[]> {
   return ingredients.reduce<Record<string, Ingredient[]>>(
     (groups, ingredient) => {
       const groupKey = ingredient.group?.trim() || "Основні";
@@ -54,7 +56,7 @@ export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
   );
 
   return (
-    <article className="overflow-hidden w-full rounded-3xl border border-zinc-200 bg-white shadow-sm hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
+    <article className="overflow-hidden relative w-full rounded-3xl border border-zinc-200 bg-white shadow-sm hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
       <div className="space-y-6 p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-40">
           <div>
@@ -79,7 +81,10 @@ export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
 
           <div className="flex flex-wrap gap-2">
             {recipy.type.map((type) => (
-              <Badge key={type} className=" text-green-800 text-xs bg-amber-100 dark:bg-amber-900/30 dark:text-amber-300">
+              <Badge
+                key={type}
+                className=" text-green-800 text-xs bg-amber-100 dark:bg-amber-900/30 dark:text-amber-300"
+              >
                 {DishType[type]}
               </Badge>
             ))}

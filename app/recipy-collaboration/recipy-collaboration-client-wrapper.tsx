@@ -2,6 +2,7 @@
 import {
   CopilotSidebar,
   useAgentContext,
+  useComponent,
   useConfigureSuggestions,
   useFrontendTool,
 } from "@copilotkit/react-core/v2";
@@ -9,15 +10,20 @@ import { useUserEmail } from "../_lib/UserContext";
 import {
   DishType,
   emptyRecipy,
+  MeasuringUnitTextFull,
   NewRecipy,
   NewRecipySchema,
   Product,
+  ProductSchema,
+  ProductTypeText,
 } from "../_lib/definitions";
 import { useState } from "react";
 import FullRecipyCard from "@/components/recipy";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { prepareReciyForDatabase } from "../_lib/utils";
+import { database } from "../_lib/firebase";
+import { push, ref, set } from "firebase/database";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -28,6 +34,30 @@ const ChatHeader = () => {
     </div>
   );
 };
+
+function addNewProductCard(product: Product) {
+  async function addProduct() {
+    const productssRef = ref(database, "products");
+    const newProductRef = push(productssRef);
+    const result = await set(newProductRef, product);
+    console.log(result);
+    console.log(newProductRef.key);
+  }
+  return (
+    <div className="border rounded p-4 mb-4">
+      <h3 className="text-lg font-bold">{product.name}</h3>
+      <p>Тип: {ProductTypeText[product.type]}</p>
+      <p>Калорійність: {product.calories} ккал</p>
+      <p>Щільність: {product.density} кг/м3</p>
+      <p>Одиниця виміру: {MeasuringUnitTextFull[product.defaultUnit]}</p>
+      <p>Коефіцієнт зміни маси при приготуванні: {product.sizeChangeCoef}</p>
+      <p>Вага 1шт. в грамах: {product.grInOneItem}</p>
+      <Button className="w-full" onClick={addProduct}>
+        Додати
+      </Button>
+    </div>
+  );
+}
 
 export default function RecipyCollaboration({
   products,
@@ -46,9 +76,9 @@ export default function RecipyCollaboration({
 
   useAgentContext({
     description: `Products is an array of the products that can be used in the recipe.
-    Thouroughly check the products array, majority of common products is available.
-If there is no needed product available, look for alternatives.
-If no alternatives, do not include the ingredient in the recipe.
+    Thouroughly check the products array, majority of common products is available. 
+If there is no needed product available, suggest adding the missing product.
+
 Always check whether the ingredient id is correct and its name matches the product name in the products array.
 Thoroughly check the measirung units, prefer the unit that is defined as default for the product in the products array.
 Do not add ingredients that are not in the array.
@@ -59,6 +89,18 @@ The recipy should be in Ukrainian.
       `,
     value: { products, recipy, type: DishType },
   });
+
+  useComponent(
+    {
+      name: "suggestAddNewProduct",
+      description: `Suggest adding new product to the products array,       
+      leave id empty, it will be added at the backend
+      `,
+      parameters: ProductSchema,
+      render: addNewProductCard,
+    },
+    [],
+  );
 
   useFrontendTool({
     name: "updateRecipy",
@@ -95,28 +137,36 @@ The recipy should be in Ukrainian.
     available: "after-first-message",
   });
 
-  function saveRecipy(userEmail: string | null) {
+  async function saveRecipy(userEmail: string | null) {
     if (!recipy) return;
     // Here you would typically send the recipy to your backend to save it in a database
     const preparedForDb = prepareReciyForDatabase(recipy, products);
-    const fixxedFields = {
+    const readyToSave = {
       ...preparedForDb,
       createdOn: Date.now(),
       author: userEmail || "test@gmail.com",
     };
-    console.log("Saving recipy to database:", fixxedFields);
+    const validationResult = NewRecipySchema.safeParse(readyToSave)
+    const isValid = validationResult.success;
+    if (isValid) {
+      const recipiesRef = ref(database, "recipies");
+    const newRecipeRef = push(recipiesRef);
+    const result = await set(newRecipeRef, readyToSave);
+    } else {
+      console.log(validationResult.error.message)
+    }
   }
 
   const mainPanel = recipy ? (
-    <>
-      <FullRecipyCard recipy={recipy} />
+    <div className="flex flex-col gap-1 w-full">
       <Button
         onClick={() => saveRecipy(userEmail)}
         className="mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700"
       >
         Зберегти
       </Button>
-    </>
+      <FullRecipyCard recipy={recipy} />
+    </div>
   ) : (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-9">
       <Image
