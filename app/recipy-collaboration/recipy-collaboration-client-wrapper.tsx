@@ -31,6 +31,7 @@ import NotificationAlert, {
   CooksterNotification,
   NotificationHidden,
 } from "@/components/ui/notification";
+import AddSourcePromptDialog from "@/components/forms/add-source-prompt-dialog";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -75,6 +76,7 @@ export default function RecipyCollaboration({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notification, setNotification] =
     useState<CooksterNotification>(NotificationHidden);
+  const [isShowSourcePrompt, setIsShowSourcePrompt] = useState(false);
   const userEmail = useUserEmail();
   const setUserEmail = useSetUserInfo();
 
@@ -179,6 +181,11 @@ The recipy should be in Ukrainian.
   async function saveRecipy(userEmail: string | null) {
     if (!recipy) return;
 
+    if(!recipy.source?.length){
+      setIsShowSourcePrompt(true);
+      return;
+    }
+
     setIsLoading(true);
 
     const preparedForDb = prepareReciyForDatabase(recipy, products);
@@ -219,6 +226,19 @@ The recipy should be in Ukrainian.
         title: "The recipy could not be saved",
         message: "Reason: " + validationResult.error.message,
         isOpen: true,
+      });
+    }
+  }
+
+  function addRecipeSource(source: string) {
+    if (source.length) {
+      updateRecipy({ source });
+    } else {
+      showNotification({
+        title: "No source has been indicated",
+        message: "The recipy hasn't been updated",
+        isOpen: true,
+        type: "error",
       });
     }
   }
@@ -271,6 +291,7 @@ The recipy should be in Ukrainian.
         isOpen={notification.isOpen}
         title={notification.title}
       />
+      <AddSourcePromptDialog isOpen={isShowSourcePrompt} onSubmit={addRecipeSource} />
       <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
         <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
           {mainPanel}
