@@ -32,6 +32,7 @@ import NotificationAlert, {
   NotificationHidden,
 } from "@/components/ui/notification";
 import AddSourcePromptDialog from "@/components/forms/add-source-prompt-dialog";
+import useLocalStorage from "../_lib/customHooks/useLocalStorage";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -79,6 +80,7 @@ export default function RecipyCollaboration({
   const [isShowSourcePrompt, setIsShowSourcePrompt] = useState(false);
   const userEmail = useUserEmail();
   const setUserEmail = useSetUserInfo();
+    const [savedUserEmail] = useLocalStorage(LOCAL_STORAGE_USER_EMAIL_KEY, '')
 
   function hideNotification() {
     setNotification(NotificationHidden);
@@ -93,9 +95,8 @@ export default function RecipyCollaboration({
 
   useLayoutEffect(() => {
     if (!userEmail) {
-      const storedEmail = localStorage.getItem(LOCAL_STORAGE_USER_EMAIL_KEY);
-      if (storedEmail) {
-        setUserEmail(storedEmail);
+      if (savedUserEmail) {
+        setUserEmail(savedUserEmail);
       } else {
         redirect("/");
       }

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import useLocalStorage from "@/app/_lib/customHooks/useLocalStorage";
 
 
 export const LOCAL_STORAGE_USER_EMAIL_KEY = "user-email";
@@ -18,11 +19,11 @@ export const LOCAL_STORAGE_USER_EMAIL_KEY = "user-email";
 export default function LoginForm() {
   const userEmail = useUserEmail();
   const setUserEmail = useSetUserInfo();
+  const [savedUserEmail, setSavedUserEmail] = useLocalStorage(LOCAL_STORAGE_USER_EMAIL_KEY, '')
 
   useEffect(() => {
-    const storedEmail = localStorage.getItem(LOCAL_STORAGE_USER_EMAIL_KEY);
-    if (storedEmail) {
-      setUserEmail(storedEmail);
+    if (savedUserEmail) {
+      setUserEmail(savedUserEmail);
     }
   }, []);
 
@@ -33,7 +34,7 @@ export default function LoginForm() {
     console.log("Email entered:", email);
     if (email) {
       setUserEmail(email);
-      localStorage.setItem(LOCAL_STORAGE_USER_EMAIL_KEY, email);
+      setSavedUserEmail(email);
     }
   };
 
