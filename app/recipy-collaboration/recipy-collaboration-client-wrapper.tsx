@@ -17,7 +17,7 @@ import {
   ProductSchema,
   ProductTypeText,
 } from "../_lib/definitions";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import FullRecipyCard from "@/components/recipy";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -91,7 +91,7 @@ export default function RecipyCollaboration({
     }, 6000);
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!userEmail) {
       const storedEmail = localStorage.getItem(LOCAL_STORAGE_USER_EMAIL_KEY);
       if (storedEmail) {
