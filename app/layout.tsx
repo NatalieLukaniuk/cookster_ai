@@ -45,7 +45,7 @@ export default function RootLayout({
         geistHeading.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col relative">
         <CopilotKit
           runtimeUrl="/api/copilotkit"
           publicApiKey="ck_pub_0de59986ce5a6f0af5fbb1a2841a4b56"

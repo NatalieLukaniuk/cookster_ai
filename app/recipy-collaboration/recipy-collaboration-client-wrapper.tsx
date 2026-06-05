@@ -27,6 +27,10 @@ import { push, ref, set } from "firebase/database";
 import { LOCAL_STORAGE_USER_EMAIL_KEY } from "@/components/forms/login-form";
 import { redirect } from "next/navigation";
 import LoadingOverlay from "@/components/ui/loading-overlay";
+import NotificationAlert, {
+  CooksterNotification,
+  NotificationHidden,
+} from "@/components/ui/notification";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -69,8 +73,21 @@ export default function RecipyCollaboration({
 }) {
   const [recipy, setRecipy] = useState<NewRecipy | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [notification, setNotification] =
+    useState<CooksterNotification>(NotificationHidden);
   const userEmail = useUserEmail();
   const setUserEmail = useSetUserInfo();
+
+  function hideNotification() {
+    setNotification(NotificationHidden);
+  }
+
+  function showNotification(newNotification: CooksterNotification) {
+    setNotification(newNotification);
+    setTimeout(() => {
+      hideNotification();
+    }, 6000);
+  }
 
   useEffect(() => {
     if (!userEmail) {
@@ -78,7 +95,7 @@ export default function RecipyCollaboration({
       if (storedEmail) {
         setUserEmail(storedEmail);
       } else {
-        redirect('/')
+        redirect("/");
       }
     }
   }, []);
@@ -87,6 +104,12 @@ export default function RecipyCollaboration({
     setRecipy((prev: NewRecipy | null) => {
       if (!prev) return { ...emptyRecipy, ...updates };
       return { ...prev, ...updates };
+    });
+    showNotification({
+      type: "success",
+      title: "Action successful",
+      message: "",
+      isOpen: true,
     });
   }
 
@@ -170,9 +193,33 @@ The recipy should be in Ukrainian.
     if (isValid) {
       const recipiesRef = ref(database, "recipies");
       const newRecipeRef = push(recipiesRef);
-      await set(newRecipeRef, readyToSave).catch(() => setIsLoading(false)).then(() => setIsLoading(false)); //TODO add success/failure notifications
+      await set(newRecipeRef, readyToSave)
+        .catch((err) => {
+          setIsLoading(false);
+          showNotification({
+            type: "error",
+            title: "Something went wrong",
+            message: err.message,
+            isOpen: true,
+          });
+        })
+        .then(() => {
+          setIsLoading(false);
+          showNotification({
+            type: "success",
+            title: "The recipe has been saved",
+            message: "",
+            isOpen: true,
+          });
+        });
     } else {
       setIsLoading(false);
+      showNotification({
+        type: "error",
+        title: "The recipy could not be saved",
+        message: "Reason: " + validationResult.error.message,
+        isOpen: true,
+      });
     }
   }
 
@@ -188,7 +235,6 @@ The recipy should be in Ukrainian.
     </div>
   ) : (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-9">
-
       <Image
         src="/humster_sm.png"
         alt="Humster"
@@ -208,7 +254,9 @@ The recipy should be in Ukrainian.
             📋 Створювати рецепти на основі текстового опису або списку
             інгредієнтів
           </li>
-          <li>🔄 Редагувати та вдосконалювати рецепти на основі ваших побажань</li>
+          <li>
+            🔄 Редагувати та вдосконалювати рецепти на основі ваших побажань
+          </li>
           <li>🍽️ Пропонувати рецепти на основі наявних у вас інгредієнтів</li>
         </ul>
       </div>
@@ -217,27 +265,31 @@ The recipy should be in Ukrainian.
 
   return (
     <>
-    
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
-        {mainPanel}
-      </main>
-      <CopilotSidebar
-        labels={{
-          welcomeMessageText:
-            "Вставте ваш рецепт в чат і я допоможу його зберегти в базу даних cookster!",
-          chatInputPlaceholder: "",
-          chatDisclaimerText: "AI responses may be inaccurate.",
-        }}
-        defaultOpen={true}
-        header={ChatHeader}
-        input={{
-          className: "px-0",
-        }}
-      ></CopilotSidebar>
-    </div>
-    <LoadingOverlay isLoading={isLoading}/> 
+      <NotificationAlert
+        type={notification.type}
+        message={notification.message}
+        isOpen={notification.isOpen}
+        title={notification.title}
+      />
+      <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+        <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
+          {mainPanel}
+        </main>
+        <CopilotSidebar
+          labels={{
+            welcomeMessageText:
+              "Вставте ваш рецепт в чат і я допоможу його зберегти в базу даних cookster!",
+            chatInputPlaceholder: "",
+            chatDisclaimerText: "AI responses may be inaccurate.",
+          }}
+          defaultOpen={true}
+          header={ChatHeader}
+          input={{
+            className: "px-0",
+          }}
+        ></CopilotSidebar>
+      </div>
+      <LoadingOverlay isLoading={isLoading} />
     </>
-    
   );
 }
