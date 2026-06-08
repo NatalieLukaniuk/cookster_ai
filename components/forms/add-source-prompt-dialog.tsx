@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import {
@@ -11,26 +11,41 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 
-export default function AddSourcePromptDialog({isOpen, onSubmit}: {isOpen: boolean, onSubmit: (source: string) => void}) {
-    const [open, setOpen] = useState(isOpen);
-    const inputRef = useRef<HTMLInputElement>(null);
+export interface SourcePromptProps {
+  isOpen: boolean;
+  onSubmit: (source: string) => void;
+  onClose: () => void;
+}
+
+export default function AddSourcePromptDialog({
+  isOpen,
+  onSubmit,
+  onClose,
+}: SourcePromptProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  console.log("prompt init", open);
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Вкажіть джерело рецепту</DialogTitle>
         </DialogHeader>
         <div className="flex items-center gap-2">
           <div className="grid flex-1 gap-2">
-
-            <Input
-              id="link"
-              ref={inputRef}
-            />
+            <Input id="link" ref={inputRef} />
           </div>
         </div>
         <DialogFooter className="sm:justify-start">
-          <DialogClose render={<Button type="button" onClick={() => onSubmit(inputRef.current?.value || '')}>Close</Button>} />
+          <DialogClose
+            render={
+              <Button
+                type="button"
+                onClick={() => onSubmit(inputRef.current?.value || "")}
+              >
+                Close
+              </Button>
+            }
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>
