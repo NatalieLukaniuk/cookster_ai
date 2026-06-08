@@ -261,7 +261,7 @@ The recipy should be in Ukrainian.
     <div className="flex flex-col gap-1 w-full">
       <Button
         onClick={() => saveRecipy(userEmail)}
-        className="mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700"
+        className="mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 w-max self-end"
       >
         Зберегти
       </Button>
