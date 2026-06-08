@@ -76,7 +76,7 @@ export default function RecipyCollaboration({
 }: {
   products: Product[];
 }) {
-  const [recipy, setRecipy] = useState<NewRecipy | null>(mockRecipy);
+  const [recipy, setRecipy] = useState<NewRecipy | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notification, setNotification] =
     useState<CooksterNotification>(NotificationHidden);
