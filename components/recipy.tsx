@@ -3,27 +3,10 @@
 import {
   DishType,
   Ingredient,
-  MeasuringUnitText,
   NewRecipy,
 } from "@/app/_lib/definitions";
 import { Badge } from "./ui/badge";
-
-function formatAmount(amount: number) {
-  if (!Number.isFinite(amount)) return "";
-  if (Number.isInteger(amount)) return String(amount);
-  return amount.toFixed(2).replace(/\.?(0+)$/, "");
-}
-
-function formatIngredientLabel(ingredient: Ingredient) {
-  const amount = ingredient.amount ? formatAmount(ingredient.amount) : "";
-  const unit = ingredient.defaultUnit
-    ? MeasuringUnitText[ingredient.defaultUnit]
-    : "";
-  const name =
-    ingredient.ingredient?.trim() || ingredient.product || "Інгредієнт";
-
-  return [name, amount, unit].filter(Boolean).join(" ");
-}
+import EditableIngredient from "./editable-ingredient";
 
 function groupIngredients(
   ingredients: Ingredient[],
@@ -47,7 +30,13 @@ function formatStepTime(step: { timeActive: number; timePassive: number }) {
   return active || passive || "-";
 }
 
-export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
+export interface FullRecipyCardProps {
+    recipy: NewRecipy,
+    onIngredientUpdated: (updatedIngredient: Ingredient, index: number) => void
+}
+
+export default function FullRecipyCard({ recipy, onIngredientUpdated }: FullRecipyCardProps) {
+
   console.log("Rendering FullRecipyCard with recipy:", recipy);
   const ingredientGroups = groupIngredients(recipy.ingrediends);
   const totalTime = recipy.steps.reduce(
@@ -115,7 +104,7 @@ export default function FullRecipyCard({ recipy }: { recipy: NewRecipy }) {
                         key={`${group}-${index}`}
                         className="flex items-start gap-3"
                       >
-                        <span>{formatIngredientLabel(ingredient)}</span>
+                        <EditableIngredient editedIngredient={ingredient} onIngredientUpdated={(ing) => onIngredientUpdated(ing, index)}/>
                       </li>
                     ))}
                   </ul>

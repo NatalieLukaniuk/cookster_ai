@@ -10,6 +10,7 @@ import { useSetUserInfo, useUserEmail } from "../_lib/UserContext";
 import {
   DishType,
   emptyRecipy,
+  Ingredient,
   MeasuringUnitTextFull,
   NewRecipy,
   NewRecipySchema,
@@ -33,6 +34,7 @@ import NotificationAlert, {
 } from "@/components/ui/notification";
 import AddSourcePromptDialog from "@/components/forms/add-source-prompt-dialog";
 import useLocalStorage from "../_lib/customHooks/useLocalStorage";
+import { mockRecipy } from "../_lib/test-data";
 
 const ChatHeader = () => {
   const userEmail = useUserEmail();
@@ -73,14 +75,14 @@ export default function RecipyCollaboration({
 }: {
   products: Product[];
 }) {
-  const [recipy, setRecipy] = useState<NewRecipy | null>(null);
+  const [recipy, setRecipy] = useState<NewRecipy | null>(mockRecipy);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notification, setNotification] =
     useState<CooksterNotification>(NotificationHidden);
   const [isShowSourcePrompt, setIsShowSourcePrompt] = useState(false);
   const userEmail = useUserEmail();
   const setUserEmail = useSetUserInfo();
-    const [savedUserEmail] = useLocalStorage(LOCAL_STORAGE_USER_EMAIL_KEY, '')
+  const [savedUserEmail] = useLocalStorage(LOCAL_STORAGE_USER_EMAIL_KEY, "");
 
   function hideNotification() {
     setNotification(NotificationHidden);
@@ -114,6 +116,16 @@ export default function RecipyCollaboration({
       message: "",
       isOpen: true,
     });
+  }
+
+  function updateIngredient(updatedIngredient: Ingredient, index: number) {
+    if (!recipy) return;
+    const updatedIngreds = recipy.ingrediends.map((ing, i) => {
+      if (i === index) {
+        return updatedIngredient;
+      } else return ing;
+    });
+    updateRecipy({ ingrediends: updatedIngreds });
   }
 
   useAgentContext({
@@ -182,7 +194,7 @@ The recipy should be in Ukrainian.
   async function saveRecipy(userEmail: string | null) {
     if (!recipy) return;
 
-    if(!recipy.source?.length){
+    if (!recipy.source?.length) {
       setIsShowSourcePrompt(true);
       return;
     }
@@ -252,7 +264,7 @@ The recipy should be in Ukrainian.
       >
         Зберегти
       </Button>
-      <FullRecipyCard recipy={recipy} />
+      <FullRecipyCard recipy={recipy} onIngredientUpdated={updateIngredient} />
     </div>
   ) : (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-9">
@@ -292,7 +304,10 @@ The recipy should be in Ukrainian.
         isOpen={notification.isOpen}
         title={notification.title}
       />
-      <AddSourcePromptDialog isOpen={isShowSourcePrompt} onSubmit={addRecipeSource} />
+      <AddSourcePromptDialog
+        isOpen={isShowSourcePrompt}
+        onSubmit={addRecipeSource}
+      />
       <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
         <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
           {mainPanel}
