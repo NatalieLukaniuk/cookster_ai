@@ -241,6 +241,7 @@ export const PreparationStepSchema = z.object({
   description: z.string(),
   timeActive: z.number(),
   timePassive: z.number(),
+  id: z.string().optional()
 });
 
 export type PreparationStep = z.infer<typeof PreparationStepSchema>;

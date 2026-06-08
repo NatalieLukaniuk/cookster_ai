@@ -14,6 +14,7 @@ import {
   MeasuringUnitTextFull,
   NewRecipy,
   NewRecipySchema,
+  PreparationStep,
   Product,
   ProductSchema,
   ProductTypeText,
@@ -132,6 +133,22 @@ export default function RecipyCollaboration({
     if (!recipy|| typeof(index) === undefined) return;
     const updatedIngrediends = recipy.ingrediends.filter((ingr, i) => i !== index);
     updateRecipy({ ingrediends: updatedIngrediends });
+  }
+
+  function updateStep(updatedStep: PreparationStep, index: number){
+    if(!recipy) return;
+    const updatedSteps = recipy.steps.map((step, i) => {
+      if(i === index){
+        return updatedStep
+      } else return step
+    })
+    updateRecipy({steps: updatedSteps})
+  }
+
+  function deleteStep(index: number){
+    if(!recipy) return;
+    const updatedSteps = recipy.steps.filter((step, i) => i !== index);
+    updateRecipy({steps: updatedSteps})
   }
 
   useAgentContext({
@@ -271,7 +288,7 @@ The recipy should be in Ukrainian.
       >
         Зберегти
       </Button>
-      <FullRecipyCard recipy={recipy} onIngredientUpdated={updateIngredient} onIngredientDeleted={deleteIngredient} />
+      <FullRecipyCard recipy={recipy} onIngredientUpdated={updateIngredient} onIngredientDeleted={deleteIngredient} onStepUpdated={updateStep} onStepDeleted={deleteStep} />
     </div>
   ) : (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-9">

@@ -1,8 +1,15 @@
 "use client";
 
-import { DishType, Ingredient, NewRecipy } from "@/app/_lib/definitions";
+import {
+  DishType,
+  Ingredient,
+  NewRecipy,
+  PreparationStep,
+} from "@/app/_lib/definitions";
 import { Badge } from "./ui/badge";
 import EditableIngredient from "./editable-ingredient";
+import EditableStep from "./editable-prep-step";
+import { v4 as uuidv4 } from "uuid";
 
 function groupIngredients(
   ingredients: Ingredient[],
@@ -19,14 +26,6 @@ function groupIngredients(
   );
 }
 
-function formatStepTime(step: { timeActive: number; timePassive: number }) {
-  const active = step.timeActive ? `${step.timeActive} хв` : null;
-  const passive = step.timePassive ? `${step.timePassive} хв пас.` : null;
-
-  if (active && passive) return `${active} / ${passive}`;
-  return active || passive || "-";
-}
-
 export interface FullRecipyCardProps {
   recipy: NewRecipy;
   onIngredientUpdated: (
@@ -34,15 +33,20 @@ export interface FullRecipyCardProps {
     index: number | undefined,
   ) => void;
   onIngredientDeleted: (index: number | undefined) => void;
+  onStepUpdated: (updatedStep: PreparationStep, index: number) => void;
+  onStepDeleted: (index: number) => void;
 }
 
 export default function FullRecipyCard({
   recipy,
   onIngredientUpdated,
   onIngredientDeleted,
+  onStepUpdated,
+  onStepDeleted,
 }: FullRecipyCardProps) {
   console.log("Rendering FullRecipyCard with recipy:", recipy);
   const ingredientGroups = groupIngredients(recipy.ingrediends);
+  const mappedSteps = recipy.steps.map(step => ({...step, id: uuidv4()}))
   const totalTime = recipy.steps.reduce(
     (sum, step) => sum + step.timeActive + step.timePassive,
     0,
@@ -140,16 +144,17 @@ export default function FullRecipyCard({
             </div>
 
             <ol className="space-y-4 text-sm text-zinc-700 dark:text-zinc-300">
-              {recipy.steps?.map((step, index) => (
+              {mappedSteps?.map((step, index) => (
                 <li
-                  key={index}
+                  key={step.id}
                   className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950"
                 >
-                  <div className="mb-2 flex items-center justify-between gap-3 text-xs uppercase tracking-[0.24em] text-zinc-500 dark:text-zinc-400">
-                    <span>Крок {index + 1}</span>
-                    <span>{formatStepTime(step)}</span>
-                  </div>
-                  <p>{step.description}</p>
+                  <EditableStep
+                    index={index}
+                    editedStep={step}
+                    onStepUpdated={(step) => onStepUpdated(step, index)}
+                    onStepDeleted={() => onStepDeleted(index)}
+                  />
                 </li>
               ))}
             </ol>
