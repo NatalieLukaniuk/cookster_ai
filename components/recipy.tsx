@@ -37,7 +37,7 @@ export interface FullRecipyCardProps {
 
 export default function FullRecipyCard({ recipy, onIngredientUpdated }: FullRecipyCardProps) {
 
-  console.log("Rendering FullRecipyCard with recipy:", recipy);
+//   console.log("Rendering FullRecipyCard with recipy:", recipy);
   const ingredientGroups = groupIngredients(recipy.ingrediends);
   const totalTime = recipy.steps.reduce(
     (sum, step) => sum + step.timeActive + step.timePassive,

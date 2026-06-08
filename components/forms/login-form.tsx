@@ -31,7 +31,7 @@ export default function LoginForm() {
 
   const handleSubmit = () => {
     const email = inputRef.current?.value;
-    console.log("Email entered:", email);
+
     if (email) {
       setUserEmail(email);
       setSavedUserEmail(email);
