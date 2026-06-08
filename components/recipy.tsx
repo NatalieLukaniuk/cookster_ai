@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  DishType,
-  Ingredient,
-  NewRecipy,
-} from "@/app/_lib/definitions";
+import { DishType, Ingredient, NewRecipy } from "@/app/_lib/definitions";
 import { Badge } from "./ui/badge";
 import EditableIngredient from "./editable-ingredient";
 
@@ -12,10 +8,11 @@ function groupIngredients(
   ingredients: Ingredient[],
 ): Record<string, Ingredient[]> {
   return ingredients.reduce<Record<string, Ingredient[]>>(
-    (groups, ingredient) => {
+    (groups, ingredient, i) => {
       const groupKey = ingredient.group?.trim() || "Основні";
       if (!groups[groupKey]) groups[groupKey] = [];
-      groups[groupKey].push(ingredient);
+      groups[groupKey].push({ ...ingredient, originalIndex: i });
+      console.log(groups);
       return groups;
     },
     {},
@@ -31,13 +28,20 @@ function formatStepTime(step: { timeActive: number; timePassive: number }) {
 }
 
 export interface FullRecipyCardProps {
-    recipy: NewRecipy,
-    onIngredientUpdated: (updatedIngredient: Ingredient, index: number) => void
+  recipy: NewRecipy;
+  onIngredientUpdated: (
+    updatedIngredient: Ingredient,
+    index: number | undefined,
+  ) => void;
+  onIngredientDeleted: (index: number | undefined) => void;
 }
 
-export default function FullRecipyCard({ recipy, onIngredientUpdated }: FullRecipyCardProps) {
-
-//   console.log("Rendering FullRecipyCard with recipy:", recipy);
+export default function FullRecipyCard({
+  recipy,
+  onIngredientUpdated,
+  onIngredientDeleted,
+}: FullRecipyCardProps) {
+  console.log("Rendering FullRecipyCard with recipy:", recipy);
   const ingredientGroups = groupIngredients(recipy.ingrediends);
   const totalTime = recipy.steps.reduce(
     (sum, step) => sum + step.timeActive + step.timePassive,
@@ -101,10 +105,18 @@ export default function FullRecipyCard({ recipy, onIngredientUpdated }: FullReci
                   <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
                     {items.map((ingredient, index) => (
                       <li
-                        key={`${group}-${index}`}
+                        key={`${group}-${ingredient.product}`}
                         className="flex items-start gap-3"
                       >
-                        <EditableIngredient editedIngredient={ingredient} onIngredientUpdated={(ing) => onIngredientUpdated(ing, index)}/>
+                        <EditableIngredient
+                          editedIngredient={ingredient}
+                          onIngredientUpdated={(ing) =>
+                            onIngredientUpdated(ing, ingredient.originalIndex)
+                          }
+                          onIngredientDeleted={() =>
+                            onIngredientDeleted(ingredient.originalIndex)
+                          }
+                        />
                       </li>
                     ))}
                   </ul>

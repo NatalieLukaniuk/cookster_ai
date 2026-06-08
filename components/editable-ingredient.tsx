@@ -16,17 +16,19 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Button } from "./ui/button";
-import { Check, Undo2 } from "lucide-react";
+import { Check, Trash2, Undo2 } from "lucide-react";
 import clsx from 'clsx';
 
 export interface EditableIngredientProps {
     editedIngredient: Ingredient;
-    onIngredientUpdated: (updatedIngredient: Ingredient) => void
+    onIngredientUpdated: (updatedIngredient: Ingredient) => void;
+    onIngredientDeleted: () => void;
 }
 
 export default function EditableIngredient({
   editedIngredient,
-  onIngredientUpdated
+  onIngredientUpdated,
+  onIngredientDeleted
 }: EditableIngredientProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [ingredient, setIngredient] = useState<Ingredient>(editedIngredient);
@@ -103,6 +105,9 @@ export default function EditableIngredient({
           </span>
         </>
       )}
+      <Button onClick={onIngredientDeleted} variant="ghost" size="icon-sm">
+            <Trash2 />
+          </Button>
     </div>
   );
 }

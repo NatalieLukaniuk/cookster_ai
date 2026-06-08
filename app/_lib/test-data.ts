@@ -8,18 +8,21 @@ export const mockRecipy: NewRecipy = {
       ingredient: 'стегно куряче (з кісткою)',
       amount: 1,
       defaultUnit: 2,
+      group: 'maijn'
     },
     {
       product: "-N6dDvHe3TDZQoXdS6SM",
       ingredient: 'лавровий лист',
       amount: 2,
       defaultUnit: 11,
+      group: 'maijn'
     },
     {
       product: "-MuzkZy2nirf6qELBlSb",
       ingredient: 'соєвий соус',
       amount: 2,
       defaultUnit: 5,
+      group: 'extra'
     },
   ],
   steps: [
@@ -34,7 +37,7 @@ export const mockRecipy: NewRecipy = {
         timePassive: 0
     },
   ],
-  isSplitIntoGroups: false,
+  isSplitIntoGroups: true,
   complexity: Complexity.simple,
   type: [DishType.варіння, DishType.гарнір],
   author: "admin@cookster.net",

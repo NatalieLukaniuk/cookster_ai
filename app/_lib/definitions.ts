@@ -232,6 +232,7 @@ export const IngredientSchema = z.object({
   group: z.string().optional(),
   ingredient: z.string().optional().describe("Must match the name of the product in the database."),
   prep: z.array(z.string()).optional(),
+  originalIndex: z.number().optional()
 });
 
 export type Ingredient = z.infer<typeof IngredientSchema>;
