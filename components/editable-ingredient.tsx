@@ -2,6 +2,7 @@
 
 import {
   Ingredient,
+  MeasuringUnit,
   MeasuringUnitOptions,
   MeasuringUnitText,
 } from "@/app/_lib/definitions";
@@ -11,12 +12,12 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { Check, Undo2 } from "lucide-react";
+import clsx from 'clsx';
 
 export interface EditableIngredientProps {
     editedIngredient: Ingredient;
@@ -42,12 +43,12 @@ export default function EditableIngredient({
     setIsEditing(!isEditing);
   };
 
-  // Keep state updated as the user types
-  const handleAmountChange = (e) => {
-    setIngredient((ing) => ({ ...ing, amount: e.target.value }));
+  const handleAmountChange = (e: { target: { value: string; }; }) => {
+    setIngredient((ing) => ({ ...ing, amount: +e.target.value }));
   };
 
-  const handleUnitChange = (e) => {
+  const handleUnitChange = (e: MeasuringUnit | null) => {
+    if(!e) return;
     setIngredient((ing) => ({ ...ing, defaultUnit: e }));
   };
 
@@ -62,12 +63,12 @@ export default function EditableIngredient({
   };
 
   return (
-    <div className="flex gap-3 items-center">
+    <div className={clsx("flex items-center h-9", isEditing? 'gap-3' : 'gap-1')}>
       <span>{ingredient.ingredient} </span>
       {isEditing ? (
         <>
           <Input
-            className="max-w-16"
+            className="max-w-16 w-auto h-9"
             value={ingredient.amount}
             onChange={handleAmountChange}
           />
@@ -76,10 +77,10 @@ export default function EditableIngredient({
             value={ingredient.defaultUnit}
             onValueChange={handleUnitChange}
           >
-            <SelectTrigger className="max-w-20">
+            <SelectTrigger className="max-w-20" size="sm">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent alignItemWithTrigger={false}>
               {selectOptions().map((item) => (
                 <SelectItem key={item.value} value={item.value}>
                   {item.label}
@@ -87,10 +88,10 @@ export default function EditableIngredient({
               ))}
             </SelectContent>
           </Select>
-          <Button onClick={applyChange} variant="outline" size="icon">
+          <Button onClick={applyChange} variant="outline" size="icon-sm">
             <Check />
           </Button>
-          <Button onClick={discardChange} variant="destructive" size="icon">
+          <Button onClick={discardChange} variant="destructive" size="icon-sm">
             <Undo2 />
           </Button>
         </>

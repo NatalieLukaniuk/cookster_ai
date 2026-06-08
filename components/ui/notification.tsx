@@ -38,8 +38,8 @@ export default function NotificationAlert({
     >
       {icon}
       <div>
-        {title.length && <AlertTitle>{title}</AlertTitle>}
-        {message.length && <AlertDescription>{message}</AlertDescription>}
+        {title.length > 0 && <AlertTitle>{title}</AlertTitle>}
+        {message.length > 0 && <AlertDescription>{message}</AlertDescription>}
       </div>
     </Alert>
   );

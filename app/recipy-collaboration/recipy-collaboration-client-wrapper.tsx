@@ -112,7 +112,7 @@ export default function RecipyCollaboration({
     });
     showNotification({
       type: "success",
-      title: "Action successful",
+      title: "Рецепт оновлено",
       message: "",
       isOpen: true,
     });
