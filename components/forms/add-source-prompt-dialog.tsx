@@ -28,7 +28,7 @@ export default function AddSourcePromptDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Вкажіть джерело рецепту</DialogTitle>
+          <DialogTitle className="w-2/3">Вкажіть джерело рецепту</DialogTitle>
         </DialogHeader>
         <div className="flex items-center gap-2">
           <div className="grid flex-1 gap-2">

@@ -272,10 +272,10 @@ The recipy should be in Ukrainian.
   }
 
   const mainPanel = recipy ? (
-    <div className="flex flex-col gap-1 w-full">
+    <div className="flex flex-col gap-1 w-full relative">
       <Button
         onClick={() => saveRecipy(userEmail)}
-        className="mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 w-max self-end"
+        className="absolute top-0 right-2 z-10 sm:static mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 w-max self-end"
       >
         Зберегти
       </Button>
@@ -325,7 +325,7 @@ The recipy should be in Ukrainian.
         onClose={() => setIsShowSourcePrompt(false)}
       />
       <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-        <main className="flex flex-1 w-full flex-col items-center justify-between py-4 px-16 bg-white dark:bg-black sm:items-start">
+        <main className="flex flex-1 w-full flex-col items-center justify-between sm:py-4 sm:px-16 bg-white dark:bg-black sm:items-start pb-20 sm:pb-0">
           {mainPanel}
         </main>
         <CopilotSidebar
