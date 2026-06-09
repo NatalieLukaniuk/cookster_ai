@@ -5,8 +5,8 @@ export const mapProductsToArray = (res: object) => {
   const products: Product[] = [];
   for (const entry of array) {
     const product: Product = {
-      id: entry[0],
       ...entry[1],
+      id: entry[0],      
     };
     products.push(product);
   }
