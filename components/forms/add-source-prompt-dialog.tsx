@@ -23,7 +23,7 @@ export default function AddSourcePromptDialog({
   onClose,
 }: SourcePromptProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  console.log("prompt init", open);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
