@@ -37,15 +37,6 @@ import AddSourcePromptDialog from "@/components/forms/add-source-prompt-dialog";
 import useLocalStorage from "../_lib/customHooks/useLocalStorage";
 import { mockRecipy } from "../_lib/test-data";
 
-const ChatHeader = () => {
-  const userEmail = useUserEmail();
-  return (
-    <div className="text-green-800 p-4 text-center">
-      {userEmail && <span>{userEmail}</span>}
-      {!userEmail && <span>Noname</span>}, давайте готувати разом! 🍳
-    </div>
-  );
-};
 
 function addNewProductCard(product: Product) {
   async function addProduct() {
@@ -345,7 +336,6 @@ The recipy should be in Ukrainian.
             chatDisclaimerText: "AI responses may be inaccurate.",
           }}
           defaultOpen={true}
-          header={ChatHeader}
           input={{
             className: "px-0",
           }}
