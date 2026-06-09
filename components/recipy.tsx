@@ -57,7 +57,7 @@ export default function FullRecipyCard({
       <div className="space-y-6 p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-40">
           <div>
-            <h2 className="sm:text-2xl font-semibold text-zinc-950 dark:text-white">
+            <h2 className="w-2/3 sm:text-2xl font-semibold text-zinc-950 dark:text-white">
               {recipy.name}
             </h2>
             <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">

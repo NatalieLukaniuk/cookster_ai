@@ -12,6 +12,7 @@ import {
   emptyRecipy,
   Ingredient,
   MeasuringUnitTextFull,
+  NewProduct,
   NewRecipy,
   NewRecipySchema,
   PreparationStep,
@@ -35,32 +36,7 @@ import NotificationAlert, {
 } from "@/components/ui/notification";
 import AddSourcePromptDialog from "@/components/forms/add-source-prompt-dialog";
 import useLocalStorage from "../_lib/customHooks/useLocalStorage";
-import { mockRecipy } from "../_lib/test-data";
 
-
-function addNewProductCard(product: Product) {
-  async function addProduct() {
-    const productssRef = ref(database, "products");
-    const newProductRef = push(productssRef);
-    const result = await set(newProductRef, product);
-    console.log(result);
-    console.log(newProductRef.key);
-  }
-  return (
-    <div className="border rounded p-4 mb-4">
-      <h3 className="text-lg font-bold">{product.name}</h3>
-      <p>Тип: {ProductTypeText[product.type]}</p>
-      <p>Калорійність: {product.calories} ккал</p>
-      <p>Щільність: {product.density} кг/м3</p>
-      <p>Одиниця виміру: {MeasuringUnitTextFull[product.defaultUnit]}</p>
-      <p>Коефіцієнт зміни маси при приготуванні: {product.sizeChangeCoef}</p>
-      <p>Вага 1шт. в грамах: {product.grInOneItem}</p>
-      <Button className="w-full" onClick={addProduct}>
-        Додати
-      </Button>
-    </div>
-  );
-}
 
 export default function RecipyCollaboration({
   products,
@@ -110,8 +86,11 @@ export default function RecipyCollaboration({
     });
   }
 
-  function updateIngredient(updatedIngredient: Ingredient, index: number | undefined) {
-    if (!recipy || typeof(index) === undefined) return;
+  function updateIngredient(
+    updatedIngredient: Ingredient,
+    index: number | undefined,
+  ) {
+    if (!recipy || typeof index === undefined) return;
     const updatedIngreds = recipy.ingrediends.map((ing, i) => {
       if (i === index) {
         return updatedIngredient;
@@ -120,26 +99,28 @@ export default function RecipyCollaboration({
     updateRecipy({ ingrediends: updatedIngreds });
   }
 
-  function deleteIngredient(index: number | undefined){
-    if (!recipy|| typeof(index) === undefined) return;
-    const updatedIngrediends = recipy.ingrediends.filter((ingr, i) => i !== index);
+  function deleteIngredient(index: number | undefined) {
+    if (!recipy || typeof index === undefined) return;
+    const updatedIngrediends = recipy.ingrediends.filter(
+      (ingr, i) => i !== index,
+    );
     updateRecipy({ ingrediends: updatedIngrediends });
   }
 
-  function updateStep(updatedStep: PreparationStep, index: number){
-    if(!recipy) return;
+  function updateStep(updatedStep: PreparationStep, index: number) {
+    if (!recipy) return;
     const updatedSteps = recipy.steps.map((step, i) => {
-      if(i === index){
-        return updatedStep
-      } else return step
-    })
-    updateRecipy({steps: updatedSteps})
+      if (i === index) {
+        return updatedStep;
+      } else return step;
+    });
+    updateRecipy({ steps: updatedSteps });
   }
 
-  function deleteStep(index: number){
-    if(!recipy) return;
+  function deleteStep(index: number) {
+    if (!recipy) return;
     const updatedSteps = recipy.steps.filter((step, i) => i !== index);
-    updateRecipy({steps: updatedSteps})
+    updateRecipy({ steps: updatedSteps });
   }
 
   useAgentContext({
@@ -157,6 +138,47 @@ The recipy should be in Ukrainian.
       `,
     value: { products, recipy, type: DishType },
   });
+
+  function onProductAdded() {
+    showNotification({
+      type: "success",
+      title: "The product has been saved",
+      message: "",
+      isOpen: true,
+    });
+  }
+
+  function addNewProductCard(product: Product) {
+  async function addProduct() {
+    const updatedProduct: NewProduct = {
+      name: product.name,
+      density: product.density,
+      calories: product.calories,
+      defaultUnit: product.defaultUnit,
+      type: product.type,
+      sizeChangeCoef: product.sizeChangeCoef,
+      grInOneItem: product.grInOneItem
+    }
+    const productssRef = ref(database, "products");
+    const newProductRef = push(productssRef);
+    set(newProductRef, updatedProduct).then(() => onProductAdded());
+
+  }
+  return (
+    <div className="border rounded p-4 mb-4">
+      <h3 className="text-lg font-bold">{product.name}</h3>
+      <p>Тип: {ProductTypeText[product.type]}</p>
+      <p>Калорійність: {product.calories} ккал</p>
+      <p>Щільність: {product.density} кг/м3</p>
+      <p>Одиниця виміру: {MeasuringUnitTextFull[product.defaultUnit]}</p>
+      <p>Коефіцієнт зміни маси при приготуванні: {product.sizeChangeCoef}</p>
+      <p>Вага 1шт. в грамах: {product.grInOneItem}</p>
+      <Button className="w-full" onClick={addProduct}>
+        Додати
+      </Button>
+    </div>
+  );
+}
 
   useComponent(
     {
@@ -279,7 +301,13 @@ The recipy should be in Ukrainian.
       >
         Зберегти
       </Button>
-      <FullRecipyCard recipy={recipy} onIngredientUpdated={updateIngredient} onIngredientDeleted={deleteIngredient} onStepUpdated={updateStep} onStepDeleted={deleteStep} />
+      <FullRecipyCard
+        recipy={recipy}
+        onIngredientUpdated={updateIngredient}
+        onIngredientDeleted={deleteIngredient}
+        onStepUpdated={updateStep}
+        onStepDeleted={deleteStep}
+      />
     </div>
   ) : (
     <div className="flex flex-1 flex-col items-center justify-center h-full w-full gap-9">

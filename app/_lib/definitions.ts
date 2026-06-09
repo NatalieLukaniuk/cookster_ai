@@ -225,6 +225,18 @@ export const ProductSchema = z.object({
 
 export type Product = z.infer<typeof ProductSchema>;
 
+export const NewProductSchema = z.object({
+  name: z.string(),
+  density: z.number().describe("Density in kg/m3, needed for converting from volume to weight units"),
+  grInOneItem: z.number().optional().describe("Weight of 1 item in gr., available only for ProductType HardItem; for others should be set to 0"),
+  calories: z.number().describe("kcal per 100gr"),
+  defaultUnit: z.enum(MeasuringUnit),
+  type: z.enum(ProductType),
+  sizeChangeCoef: z.number(),
+})
+
+export type NewProduct = z.infer<typeof NewProductSchema>;
+
 export const IngredientSchema = z.object({
   product: z.string().describe("ID of the product in the database. Must match id of one of the products from the products array."),
   amount: z.number(),
