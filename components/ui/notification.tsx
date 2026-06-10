@@ -34,7 +34,7 @@ export default function NotificationAlert({
   return (
     <Alert
       variant={variant}
-      className="absolute top-2.5 sm:left-1/2 w-full sm:w-1/3 flex items-center gap-4.5 shadow-md"
+      className="absolute top-2.5 sm:left-1/2 w-full sm:w-1/3 flex items-center gap-4.5 shadow-md z-1300"
     >
       {icon}
       <div>
