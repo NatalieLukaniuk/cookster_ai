@@ -196,7 +196,7 @@ export function countRecipyTotalCalories(ingreds: Ingredient[], allProducts: Pro
   }
 
   function fixIngredId(ingredient: Ingredient, allProducts: Product[]){
-    const correctId = allProducts.find(item => item.name === ingredient.ingredient)?.id;
+    const correctId = allProducts.find(item => item.name.toLowerCase() === ingredient.ingredient?.toLowerCase())?.id;
     if(correctId !== ingredient.product){
       console.log('fixed id for ' + ingredient.ingredient)
     }
