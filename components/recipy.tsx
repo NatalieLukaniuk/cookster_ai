@@ -53,11 +53,11 @@ export default function FullRecipyCard({
   );
 
   return (
-    <article className="overflow-hidden relative w-full sm:rounded-3xl sm:border sm:border-zinc-200 bg-white shadow-sm hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
+    <article className="overflow-hidden relative w-full 2xl:rounded-3xl 2xl:border sm:border-zinc-200 bg-white shadow-sm hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950">
       <div className="space-y-6 p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-40">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1.5 sm:gap-4 lg:gap-10">
           <div>
-            <h2 className="w-2/3 sm:text-2xl font-semibold text-zinc-950 dark:text-white">
+            <h2 className="w-2/3 sm:w-full sm:text-2xl font-semibold text-zinc-950 dark:text-white">
               {recipy.name}
             </h2>
             <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
@@ -89,8 +89,8 @@ export default function FullRecipyCard({
         </div>
 
         <section className="space-y-8 sm:space-y-4">
-          <div className="rounded-3xl sm:border border-zinc-200 sm:bg-zinc-50 sm:p-5 dark:border-zinc-800 sm:dark:bg-zinc-900">
-            <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between">
+          <div className="sm:rounded-xl 2xl:rounded-3xl 2xl:border border-zinc-200 sm:bg-zinc-50 sm:p-5 dark:border-zinc-800 sm:dark:bg-zinc-900">
+            <div className="mb-4 flex flex-col lg:flex-row lg:items-center justify-between">
               <h3 className="text-lg font-semibold text-zinc-950 dark:text-white">
                 Інгредієнти
               </h3>
@@ -98,7 +98,7 @@ export default function FullRecipyCard({
                 Рекомендована порція: {recipy.portionSize ?? 0} грамів
               </span>
             </div>
-            <div className="flex gap-10 sm:flex-row flex-col">
+            <div className="flex gap-10 lg:flex-row flex-col">
               {Object.entries(ingredientGroups).map(([group, items]) => (
                 <div key={group} className="space-y-3">
                   {group !== "Основні" ? (
@@ -129,9 +129,9 @@ export default function FullRecipyCard({
             </div>
           </div>
 
-          <div className="rounded-3xl sm:border border-zinc-200 sm:bg-zinc-50 sm:p-5 dark:border-zinc-800 sm:dark:bg-zinc-900">
+          <div className="sm:rounded-xl 2xl:rounded-3xl 2xl:border border-zinc-200 sm:bg-zinc-50 sm:p-5 dark:border-zinc-800 sm:dark:bg-zinc-900">
             <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-3 justify-between w-full">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-3 justify-between w-full">
                 <h3 className="text-lg font-semibold text-zinc-950 dark:text-white">
                   Приготування
                 </h3>
@@ -147,7 +147,7 @@ export default function FullRecipyCard({
               {mappedSteps?.map((step, index) => (
                 <li
                   key={step.id}
-                  className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950"
+                  className="sm:rounded-xl 2xl:rounded-3xl 2xl:border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950"
                 >
                   <EditableStep
                     index={index}

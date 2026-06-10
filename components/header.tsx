@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Header() {
      const userEmail = useUserEmail();
   return (
-    <header className="w-full sticky top-0 py-4 px-6 bg-white dark:bg-black shadow-sm">
+    <header className="w-full sticky top-0 z-20 py-4 px-6 bg-white dark:bg-black shadow-sm">
       <Link
         href="/"
         className="text-2xl font-bold text-zinc-950 dark:text-white"

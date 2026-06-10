@@ -20,7 +20,7 @@ import {
   ProductSchema,
   ProductTypeText,
 } from "../_lib/definitions";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import FullRecipyCard from "@/components/recipy";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -36,6 +36,7 @@ import NotificationAlert, {
 } from "@/components/ui/notification";
 import AddSourcePromptDialog from "@/components/forms/add-source-prompt-dialog";
 import useLocalStorage from "../_lib/customHooks/useLocalStorage";
+import z from 'zod';
 
 
 export default function RecipyCollaboration({
@@ -233,7 +234,9 @@ The recipy should be in Ukrainian.
   async function saveRecipy(userEmail: string | null) {
     if (!recipy) return;
 
-    if (!recipy.source?.length) {
+    const UrlSchema = z.url();
+
+    if (!recipy.source?.length || !UrlSchema.safeParse(recipy.source).success) {
       setIsShowSourcePrompt(true);
       return;
     }
@@ -300,7 +303,7 @@ The recipy should be in Ukrainian.
     <div className="flex flex-col gap-1 w-full relative">
       <Button
         onClick={() => saveRecipy(userEmail)}
-        className="absolute top-0 right-2 z-10 sm:static mt-4 px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 w-max self-end"
+        className="absolute top-0 right-2 z-10 sm:static mt-4 px-4 md:mx-6 py-2 bg-green-800 text-white rounded-md hover:bg-green-700 w-max self-end"
       >
         Зберегти
       </Button>
@@ -321,7 +324,7 @@ The recipy should be in Ukrainian.
         width={100}
         height={178}
       />
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 px-3.5">
         <h2 className="text-2xl font-semibold text-center text-zinc-950 dark:text-white mb-4">
           Вітаю, я ваш помічник у створенні рецептів! 🍳
         </h2>
@@ -336,7 +339,7 @@ The recipy should be in Ukrainian.
           <li>
             🔄 Редагувати та вдосконалювати рецепти на основі ваших побажань
           </li>
-          <li>🍽️ Пропонувати рецепти на основі наявних у вас інгредієнтів</li>
+          <li>🍽️ Додавати нові продукти в базу даних Cookster</li>
         </ul>
       </div>
     </div>
@@ -356,10 +359,11 @@ The recipy should be in Ukrainian.
         onClose={() => setIsShowSourcePrompt(false)}
       />
       <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-        <main className="flex flex-1 w-full flex-col items-center justify-between sm:py-4 sm:px-16 bg-white dark:bg-black sm:items-start pb-20 sm:pb-0">
+        <main className="flex flex-1 w-full flex-col items-center justify-between sm:py-4 lg:px-16 bg-white dark:bg-black sm:items-start pb-20 lg:pb-0">
           {mainPanel}
         </main>
         <CopilotSidebar
+        width={"40%"}
           labels={{
             welcomeMessageText:
               "Вставте ваш рецепт в чат і я допоможу його зберегти в базу даних cookster!",
@@ -368,7 +372,7 @@ The recipy should be in Ukrainian.
           }}
           defaultOpen={true}
           input={{
-            className: "px-0",
+            className: "px-0 w-full",
           }}
         ></CopilotSidebar>
       </div>

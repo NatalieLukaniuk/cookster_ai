@@ -26,7 +26,7 @@ export default function AddSourcePromptDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md z-1300">
         <DialogHeader>
           <DialogTitle className="w-2/3">Вкажіть джерело рецепту</DialogTitle>
         </DialogHeader>
@@ -40,9 +40,10 @@ export default function AddSourcePromptDialog({
             render={
               <Button
                 type="button"
+                className="w-full"
                 onClick={() => onSubmit(inputRef.current?.value || "")}
               >
-                Close
+                Зберегти
               </Button>
             }
           />
