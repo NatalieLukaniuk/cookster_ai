@@ -7,10 +7,10 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-  InputGroupText,
 } from "./ui/input-group";
 import { BicepsFlexed, Check, Sofa, Trash2, Undo2 } from "lucide-react";
 import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 export interface EditableStepProps {
   index: number;
@@ -79,6 +79,7 @@ export default function EditableStep({
                 </InputGroupAddon>
               </InputGroup>
               <InputGroup>
+
                 <InputGroupInput
                   className="max-w-16 w-auto h-9"
                   value={step.timePassive}
@@ -108,7 +109,10 @@ export default function EditableStep({
         </div>
       </div>
       {isEditing ? (
-        <Input value={step.description} onChange={handleDescriptionChange} />
+        <Textarea
+          value={step.description} onChange={handleDescriptionChange}
+        />
+
       ) : (
         <p onClick={handleToggle}>{step.description}</p>
       )}
