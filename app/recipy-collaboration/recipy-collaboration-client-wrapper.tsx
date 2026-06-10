@@ -20,7 +20,7 @@ import {
   ProductSchema,
   ProductTypeText,
 } from "../_lib/definitions";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import FullRecipyCard from "@/components/recipy";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -43,6 +43,7 @@ export default function RecipyCollaboration({
 }: {
   products: Product[];
 }) {
+  const [productsArray, setProductsArray] = useState(products);
   const [recipy, setRecipy] = useState<NewRecipy | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notification, setNotification] =
@@ -136,16 +137,18 @@ The AI can update the recipy based on the user's requests and suggestions.
 Do not include ingredient amound in the preparation steps, only in the ingredients list.
 The recipy should be in Ukrainian.
       `,
-    value: { products, recipy, type: DishType },
+    value: { productsArray, recipy, type: DishType },
   });
 
-  function onProductAdded() {
+  function onProductAdded(key: string, product: NewProduct) {
+
     showNotification({
       type: "success",
-      title: "The product has been saved",
+      title: `${product.name} додано в базу продуктів`,
       message: "",
       isOpen: true,
     });
+    setProductsArray(prev => [...prev, {...product, id: key}]);
   }
 
   function addNewProductCard(product: Product) {
@@ -161,7 +164,7 @@ The recipy should be in Ukrainian.
     }
     const productssRef = ref(database, "products");
     const newProductRef = push(productssRef);
-    set(newProductRef, updatedProduct).then(() => onProductAdded());
+    set(newProductRef, updatedProduct).then(() => onProductAdded(newProductRef.key, updatedProduct));
 
   }
   return (
@@ -237,7 +240,7 @@ The recipy should be in Ukrainian.
 
     setIsLoading(true);
 
-    const preparedForDb = prepareReciyForDatabase(recipy, products);
+    const preparedForDb = prepareReciyForDatabase(recipy, productsArray);
     const readyToSave = {
       ...preparedForDb,
       createdOn: Date.now(),
