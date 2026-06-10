@@ -20,9 +20,9 @@ import { Check, Trash2, Undo2 } from "lucide-react";
 import clsx from 'clsx';
 
 export interface EditableIngredientProps {
-    editedIngredient: Ingredient;
-    onIngredientUpdated: (updatedIngredient: Ingredient) => void;
-    onIngredientDeleted: () => void;
+  editedIngredient: Ingredient;
+  onIngredientUpdated: (updatedIngredient: Ingredient) => void;
+  onIngredientDeleted: () => void;
 }
 
 export default function EditableIngredient({
@@ -50,7 +50,7 @@ export default function EditableIngredient({
   };
 
   const handleUnitChange = (e: MeasuringUnit | null) => {
-    if(!e) return;
+    if (!e) return;
     setIngredient((ing) => ({ ...ing, defaultUnit: e }));
   };
 
@@ -65,7 +65,7 @@ export default function EditableIngredient({
   };
 
   return (
-    <div className={clsx("flex items-center h-9", isEditing? 'gap-3' : 'gap-1')}>
+    <div className={clsx("flex items-center h-9", isEditing ? 'gap-3' : 'gap-1')}>
       <span>{ingredient.ingredient} </span>
       {isEditing ? (
         <>
@@ -99,15 +99,15 @@ export default function EditableIngredient({
         </>
       ) : (
         <>
-          <span onClick={handleToggle}>{ingredient.amount}</span>
+          {ingredient.defaultUnit !== MeasuringUnit.none && <span onClick={handleToggle}>{ingredient.amount}</span>}
           <span onClick={handleToggle}>
             {MeasuringUnitText[ingredient.defaultUnit]}
           </span>
         </>
       )}
       <Button onClick={onIngredientDeleted} variant="ghost" size="icon-sm">
-            <Trash2 />
-          </Button>
+        <Trash2 />
+      </Button>
     </div>
   );
 }
