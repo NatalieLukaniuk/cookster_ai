@@ -53,11 +53,10 @@ export default function RootLayout({
         >
           <UserProvider>
             <Header />
-             {children}
-              </UserProvider>
+            {children}
+          </UserProvider>
         </CopilotKit>
       </body>
     </html>
   );
 }
-              
