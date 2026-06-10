@@ -214,10 +214,14 @@ export function countRecipyTotalCalories(ingreds: Ingredient[], allProducts: Pro
     }
   }
 
-  export function prepareReciyForDatabase(recipy: NewRecipy, allProducts: Product[]) {
+  export function prepareReciyForDatabase(recipy: NewRecipy, allProducts: Product[]): {recipy: NewRecipy, isSuccess: boolean, productsWithNoIds: Ingredient[] | null}  {
     const recipyWithFixedIngredIds = {
       ...recipy,
       ingrediends: recipy.ingrediends.map((ingr: Ingredient) => fixIngredId(ingr, allProducts))
+    }
+    const noProductId = recipyWithFixedIngredIds.ingrediends.filter(ingr => !ingr.product.length);
+    if(noProductId.length){
+      return {recipy: recipyWithFixedIngredIds, isSuccess: false, productsWithNoIds: noProductId}
     }
     const recipyWithIngredsInGrams = {
       ...recipyWithFixedIngredIds,
@@ -227,5 +231,5 @@ export function countRecipyTotalCalories(ingreds: Ingredient[], allProducts: Pro
       }))
     };
     const calorificValue = countRecipyCalorificValue(recipyWithIngredsInGrams.ingrediends, allProducts);
-    return { ...recipyWithIngredsInGrams, calorificValue };
+    return { recipy: { ...recipyWithIngredsInGrams, calorificValue}, isSuccess: true, productsWithNoIds: null };
   }

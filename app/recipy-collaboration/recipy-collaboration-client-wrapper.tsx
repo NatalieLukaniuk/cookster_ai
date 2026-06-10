@@ -149,40 +149,40 @@ The recipy should be in Ukrainian.
       message: "",
       isOpen: true,
     });
-    setProductsArray(prev => [...prev, {...product, id: key}]);
+    setProductsArray(prev => [...prev, { ...product, id: key }]);
   }
 
   function addNewProductCard(product: Product) {
-  async function addProduct() {
-    const updatedProduct: NewProduct = {
-      name: product.name,
-      density: product.density,
-      calories: product.calories,
-      defaultUnit: product.defaultUnit,
-      type: product.type,
-      sizeChangeCoef: product.sizeChangeCoef,
-      grInOneItem: product.grInOneItem
-    }
-    const productssRef = ref(database, "products");
-    const newProductRef = push(productssRef);
-    set(newProductRef, updatedProduct).then(() => onProductAdded(newProductRef.key, updatedProduct));
+    async function addProduct() {
+      const updatedProduct: NewProduct = {
+        name: product.name,
+        density: product.density,
+        calories: product.calories,
+        defaultUnit: product.defaultUnit,
+        type: product.type,
+        sizeChangeCoef: product.sizeChangeCoef,
+        grInOneItem: product.grInOneItem
+      }
+      const productssRef = ref(database, "products");
+      const newProductRef = push(productssRef);
+      set(newProductRef, updatedProduct).then(() => onProductAdded(newProductRef.key, updatedProduct));
 
+    }
+    return (
+      <div className="border rounded p-4 mb-4">
+        <h3 className="text-lg font-bold">{product.name}</h3>
+        <p>Тип: {ProductTypeText[product.type]}</p>
+        <p>Калорійність: {product.calories} ккал</p>
+        <p>Щільність: {product.density} кг/м3</p>
+        <p>Одиниця виміру: {MeasuringUnitTextFull[product.defaultUnit]}</p>
+        <p>Коефіцієнт зміни маси при приготуванні: {product.sizeChangeCoef}</p>
+        <p>Вага 1шт. в грамах: {product.grInOneItem}</p>
+        <Button className="w-full" onClick={addProduct}>
+          Додати
+        </Button>
+      </div>
+    );
   }
-  return (
-    <div className="border rounded p-4 mb-4">
-      <h3 className="text-lg font-bold">{product.name}</h3>
-      <p>Тип: {ProductTypeText[product.type]}</p>
-      <p>Калорійність: {product.calories} ккал</p>
-      <p>Щільність: {product.density} кг/м3</p>
-      <p>Одиниця виміру: {MeasuringUnitTextFull[product.defaultUnit]}</p>
-      <p>Коефіцієнт зміни маси при приготуванні: {product.sizeChangeCoef}</p>
-      <p>Вага 1шт. в грамах: {product.grInOneItem}</p>
-      <Button className="w-full" onClick={addProduct}>
-        Додати
-      </Button>
-    </div>
-  );
-}
 
   useComponent(
     {
@@ -244,8 +244,21 @@ The recipy should be in Ukrainian.
     setIsLoading(true);
 
     const preparedForDb = prepareReciyForDatabase(recipy, productsArray);
+
+    if (!preparedForDb.isSuccess) {
+      const message = preparedForDb.productsWithNoIds?.map(ingr => ingr.ingredient).join(', ')
+      showNotification({
+        type: "error",
+        title: "No ids have been found for some ingredients:",
+        message: `No ids for: ${message}`,
+        isOpen: true,
+      });
+      setIsLoading(false)
+      return;
+    }
+
     const readyToSave = {
-      ...preparedForDb,
+      ...preparedForDb.recipy,
       createdOn: Date.now(),
       author: userEmail || "test@gmail.com",
     };
@@ -363,7 +376,7 @@ The recipy should be in Ukrainian.
           {mainPanel}
         </main>
         <CopilotSidebar
-        width={"40%"}
+          width={"40%"}
           labels={{
             welcomeMessageText:
               "Вставте ваш рецепт в чат і я допоможу його зберегти в базу даних cookster!",

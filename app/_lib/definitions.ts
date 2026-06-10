@@ -273,6 +273,7 @@ export const NewRecipySchema = z.object({
   portionSize: z.number().default(200).describe("Recommended portion size in grams"),
   notApproved: z.boolean().default(false),
   isCheckedAndApproved: z.boolean().default(false),
+  calorificValue: z.number().optional()
 });
 
 export type NewRecipy = z.infer<typeof NewRecipySchema>;
